@@ -1,0 +1,88 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Server.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="MailHost" Type="System.String" Scope="User">
+      <Value Profile="(Default)">10.0.1.1</Value>
+    </Setting>
+    <Setting Name="SendReceive" Type="System.String" Scope="User">
+      <Value Profile="(Default)">60000</Value>
+    </Setting>
+    <Setting Name="CheckSMS" Type="System.String" Scope="User">
+      <Value Profile="(Default)">600000</Value>
+    </Setting>
+    <Setting Name="MailPort" Type="System.String" Scope="User">
+      <Value Profile="(Default)">110</Value>
+    </Setting>
+    <Setting Name="popSSL" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="smtpSSL" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="smtpPort" Type="System.String" Scope="User">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="baseDataPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Pastel11\</Value>
+    </Setting>
+    <Setting Name="watchDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Inetpub\FileImports\</Value>
+    </Setting>
+    <Setting Name="licensee" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DK11110068</Value>
+    </Setting>
+    <Setting Name="authCode" Type="System.String" Scope="User">
+      <Value Profile="(Default)">4228113</Value>
+    </Setting>
+    <Setting Name="importPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Inetpub\FileImports\</Value>
+    </Setting>
+    <Setting Name="rentPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">PROREN14</Value>
+    </Setting>
+    <Setting Name="trustPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">TRUST14</Value>
+    </Setting>
+    <Setting Name="astrodonPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ASTROD14</Value>
+    </Setting>
+    <Setting Name="MailUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)">noreply@astrodon.co.za</Value>
+    </Setting>
+    <Setting Name="MailPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)">stephen01</Value>
+    </Setting>
+    <Setting Name="MailAddress" Type="System.String" Scope="User">
+      <Value Profile="(Default)">stephen@metathought.co.za</Value>
+    </Setting>
+    <Setting Name="SMSUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)">astrodon_sms</Value>
+    </Setting>
+    <Setting Name="SMSPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[sms@66r94e!@#]</Value>
+    </Setting>
+    <Setting Name="AstrodonConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=SERVER2\SQLEXPRESS;Initial Catalog=Astrodon;Persist Security Info=True;User ID=sa;Password=sa&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=SERVER2\SQLEXPRESS;Initial Catalog=Astrodon;Persist Security Info=True;User ID=sa;Password=sa</Value>
+    </Setting>
+    <Setting Name="AstrodonConnectionString1" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=STEPHEN-PC\MTDNDSQL;Initial Catalog=Astrodon;Persist Security Info=True;User ID=sa;Password=m3t@p@$$&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=STEPHEN-PC\MTDNDSQL;Initial Catalog=Astrodon;Persist Security Info=True;User ID=sa;Password=m3t@p@$$</Value>
+    </Setting>
+    <Setting Name="statementrunning" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Server_StatusChecker_SMSService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://www.metathought.co.za/smsservice.asmx</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
