@@ -136,11 +136,11 @@ namespace Server
                 RaiseEvent(allCustomers.Count.ToString() + " customers retrieved from pastel");
                 mySql.ToggleConnection(true);
                 int updateCount = 0;
-                Parallel.ForEach(allCustomers, cc =>
+                foreach (CustomerConstruct cc in allCustomers)
                 {
                     mySql.InsertCustomer(cc.buildingName, cc.buildingAbbr, cc.acc, cc.emails, out status);
                     if (status != "OK") { RaiseEvent(status); } else { updateCount++; }
-                });
+                }
                 mySql.ToggleConnection(false);
                 RaiseEvent(updateCount.ToString() + " customers updated");
             }
@@ -303,7 +303,7 @@ namespace Server
 
             if (dsComplete != null && dsComplete.Tables.Count > 0 && dsComplete.Tables[0].Rows.Count > 0)
             {
-                Parallel.ForEach(dsComplete.Tables[0].AsEnumerable(), qDR =>
+                foreach (DataRow qDR in dsComplete.Tables[0].Rows)
                 {
                     bool uploaded = false;
                     while (!uploaded)
@@ -339,7 +339,7 @@ namespace Server
                         }
                         catch { }
                     }
-                });
+                }
             }
             else
             {
@@ -359,7 +359,7 @@ namespace Server
 
             if (dsComplete != null && dsComplete.Tables.Count > 0 && dsComplete.Tables[0].Rows.Count > 0)
             {
-                Parallel.ForEach(dsComplete.Tables[0].AsEnumerable(), qDR =>
+                foreach (DataRow qDR in dsComplete.Tables[0].Rows)
                 {
                     bool uploaded = false;
                     while (!uploaded)
@@ -395,7 +395,7 @@ namespace Server
                         }
                         catch { }
                     }
-                });
+                }
             }
             else
             {
@@ -430,7 +430,7 @@ namespace Server
             {
                 tobeprocessed = queue.Tables[0].Rows.Count;
                 RaiseEvent("Mail count = " + queue.Tables[0].Rows.Count.ToString());
-                Parallel.ForEach(queue.Tables[0].AsEnumerable(), qDR =>
+                foreach (DataRow qDR in queue.Tables[0].Rows)
                 {
                     try
                     {
@@ -486,7 +486,7 @@ namespace Server
                     {
                         RaiseEvent(ex.Message);
                     }
-                });
+                }
             }
             try
             {
@@ -868,7 +868,7 @@ namespace Server
             DataSet ds = DataHandler.getData(mailQuery, out status);
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
-                Parallel.ForEach(ds.Tables[0].AsEnumerable(), dr =>
+                foreach (DataRow dr in ds.Tables[0].Rows)
                 {
                     int msgID = int.Parse(dr["id"].ToString());
                     String bCode = dr["Code"].ToString();
@@ -931,7 +931,7 @@ namespace Server
                         message += statuses.Key + " = " + statuses.Value.ToString() + Environment.NewLine;
                     }
                     if (incBCC) { MailSender.SendMail(fromAddress, new String[] { bccAddy }, subject, message, false, false, false, out status, attachments); }
-                });
+                }
             }
         }
     }
