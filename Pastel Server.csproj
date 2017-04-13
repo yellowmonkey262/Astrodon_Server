@@ -143,9 +143,11 @@
     </Compile>
     <EmbeddedResource Include="frmCustomerList.resx">
       <DependentUpon>frmCustomerList.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSettings.resx">
       <DependentUpon>frmSettings.cs</DependentUpon>
@@ -198,10 +200,10 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://www.metathought.co.za/smsservice.asmx">
+    <WebReferenceUrl Include="http://www.lindenlifesaving.co.za/sms/smsservice.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\StatusChecker\</RelPath>
-      <UpdateFromURL>http://www.metathought.co.za/smsservice.asmx</UpdateFromURL>
+      <UpdateFromURL>http://www.lindenlifesaving.co.za/sms/smsservice.asmx</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>

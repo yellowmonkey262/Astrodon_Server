@@ -82,7 +82,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="Server_StatusChecker_SMSService" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">http://www.metathought.co.za/smsservice.asmx</Value>
+      <Value Profile="(Default)">http://www.lindenlifesaving.co.za/sms/smsservice.asmx</Value>
     </Setting>
   </Settings>
 </SettingsFile>

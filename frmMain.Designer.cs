@@ -38,9 +38,10 @@
             this.updateALLWebToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.purgeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sendEmailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.offAdminPurgeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stephenUploadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.offAdminPurgeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wARNINGForceRentalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -98,7 +99,8 @@
             this.updateALLWebToolStripMenuItem,
             this.purgeToolStripMenuItem,
             this.sendEmailsToolStripMenuItem,
-            this.offAdminPurgeToolStripMenuItem});
+            this.offAdminPurgeToolStripMenuItem,
+            this.wARNINGForceRentalToolStripMenuItem});
             this.adminToolStripMenuItem.Name = "adminToolStripMenuItem";
             this.adminToolStripMenuItem.Size = new System.Drawing.Size(55, 20);
             this.adminToolStripMenuItem.Text = "Admin";
@@ -106,65 +108,72 @@
             // testUploadToolStripMenuItem
             // 
             this.testUploadToolStripMenuItem.Name = "testUploadToolStripMenuItem";
-            this.testUploadToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.testUploadToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.testUploadToolStripMenuItem.Text = "Send Statements";
             this.testUploadToolStripMenuItem.Click += new System.EventHandler(this.testUploadToolStripMenuItem_Click);
             // 
             // sendLettersToolStripMenuItem
             // 
             this.sendLettersToolStripMenuItem.Name = "sendLettersToolStripMenuItem";
-            this.sendLettersToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.sendLettersToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.sendLettersToolStripMenuItem.Text = "Send letters";
             this.sendLettersToolStripMenuItem.Click += new System.EventHandler(this.sendLettersToolStripMenuItem_Click);
             // 
             // sendSMSToolStripMenuItem
             // 
             this.sendSMSToolStripMenuItem.Name = "sendSMSToolStripMenuItem";
-            this.sendSMSToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.sendSMSToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.sendSMSToolStripMenuItem.Text = "Send SMS";
             this.sendSMSToolStripMenuItem.Click += new System.EventHandler(this.sendSMSToolStripMenuItem_Click);
             // 
             // sMSReportToolStripMenuItem
             // 
             this.sMSReportToolStripMenuItem.Name = "sMSReportToolStripMenuItem";
-            this.sMSReportToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.sMSReportToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.sMSReportToolStripMenuItem.Text = "SMS Report";
             this.sMSReportToolStripMenuItem.Click += new System.EventHandler(this.sMSReportToolStripMenuItem_Click);
             // 
             // getSMSResultsToolStripMenuItem
             // 
             this.getSMSResultsToolStripMenuItem.Name = "getSMSResultsToolStripMenuItem";
-            this.getSMSResultsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.getSMSResultsToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.getSMSResultsToolStripMenuItem.Text = "Get SMS results";
             this.getSMSResultsToolStripMenuItem.Click += new System.EventHandler(this.getSMSResultsToolStripMenuItem_Click);
             // 
             // updateWebToolStripMenuItem
             // 
             this.updateWebToolStripMenuItem.Name = "updateWebToolStripMenuItem";
-            this.updateWebToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.updateWebToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.updateWebToolStripMenuItem.Text = "Update Web";
             this.updateWebToolStripMenuItem.Click += new System.EventHandler(this.updateWebToolStripMenuItem_Click);
             // 
             // updateALLWebToolStripMenuItem
             // 
             this.updateALLWebToolStripMenuItem.Name = "updateALLWebToolStripMenuItem";
-            this.updateALLWebToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.updateALLWebToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.updateALLWebToolStripMenuItem.Text = "Update ALL Web";
             this.updateALLWebToolStripMenuItem.Click += new System.EventHandler(this.updateALLWebToolStripMenuItem_Click);
             // 
             // purgeToolStripMenuItem
             // 
             this.purgeToolStripMenuItem.Name = "purgeToolStripMenuItem";
-            this.purgeToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.purgeToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.purgeToolStripMenuItem.Text = "Purge";
             this.purgeToolStripMenuItem.Click += new System.EventHandler(this.purgeToolStripMenuItem_Click);
             // 
             // sendEmailsToolStripMenuItem
             // 
             this.sendEmailsToolStripMenuItem.Name = "sendEmailsToolStripMenuItem";
-            this.sendEmailsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.sendEmailsToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.sendEmailsToolStripMenuItem.Text = "Send Emails";
             this.sendEmailsToolStripMenuItem.Click += new System.EventHandler(this.sendEmailsToolStripMenuItem_Click);
+            // 
+            // offAdminPurgeToolStripMenuItem
+            // 
+            this.offAdminPurgeToolStripMenuItem.Name = "offAdminPurgeToolStripMenuItem";
+            this.offAdminPurgeToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.offAdminPurgeToolStripMenuItem.Text = "Off admin purge";
+            this.offAdminPurgeToolStripMenuItem.Click += new System.EventHandler(this.offAdminPurgeToolStripMenuItem_Click);
             // 
             // clearScreenToolStripMenuItem
             // 
@@ -180,12 +189,12 @@
             this.stephenUploadToolStripMenuItem.Text = "Stephen - Upload";
             this.stephenUploadToolStripMenuItem.Click += new System.EventHandler(this.stephenUploadToolStripMenuItem_Click);
             // 
-            // offAdminPurgeToolStripMenuItem
+            // wARNINGForceRentalToolStripMenuItem
             // 
-            this.offAdminPurgeToolStripMenuItem.Name = "offAdminPurgeToolStripMenuItem";
-            this.offAdminPurgeToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.offAdminPurgeToolStripMenuItem.Text = "Off admin purge";
-            this.offAdminPurgeToolStripMenuItem.Click += new System.EventHandler(this.offAdminPurgeToolStripMenuItem_Click);
+            this.wARNINGForceRentalToolStripMenuItem.Name = "wARNINGForceRentalToolStripMenuItem";
+            this.wARNINGForceRentalToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.wARNINGForceRentalToolStripMenuItem.Text = "WARNING : Force Rental";
+            this.wARNINGForceRentalToolStripMenuItem.Click += new System.EventHandler(this.wARNINGForceRentalToolStripMenuItem_Click);
             // 
             // frmMain
             // 
@@ -229,6 +238,7 @@
         private System.Windows.Forms.ToolStripMenuItem clearScreenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stephenUploadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem offAdminPurgeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem wARNINGForceRentalToolStripMenuItem;
     }
 }
 

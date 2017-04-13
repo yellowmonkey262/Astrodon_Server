@@ -319,7 +319,6 @@ namespace Server
                             String attachment = qDR["attachment"].ToString();
                             String subject = qDR["subject"].ToString();
                             String[] email1 = qDR["email1"].ToString().Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-
                             bool inserted = mySqlConn.InsertStatement(actFile, "Customer Statements", actFile2, accNo, email1);
                             RaiseEvent("Upload for " + accNo + " " + inserted.ToString());
 

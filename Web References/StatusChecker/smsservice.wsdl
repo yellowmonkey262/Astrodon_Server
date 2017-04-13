@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
       <s:element name="GetStatus">
@@ -56,10 +56,10 @@
   </wsdl:binding>
   <wsdl:service name="SMSService">
     <wsdl:port name="SMSServiceSoap" binding="tns:SMSServiceSoap">
-      <soap:address location="http://www.metathought.co.za/smsservice.asmx" />
+      <soap:address location="http://www.lindenlifesaving.co.za/sms/smsservice.asmx" />
     </wsdl:port>
     <wsdl:port name="SMSServiceSoap12" binding="tns:SMSServiceSoap12">
-      <soap12:address location="http://www.metathought.co.za/smsservice.asmx" />
+      <soap12:address location="http://www.lindenlifesaving.co.za/sms/smsservice.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

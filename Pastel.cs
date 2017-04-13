@@ -104,7 +104,7 @@ namespace Server
             RaiseEvent("Import complete");
         }
 
-        private void runRental()
+        public void runRental()
         {
             String rentalStatus = "============STARTING RENTAL====================" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + Environment.NewLine;
             RaiseEvent(rentalStatus);

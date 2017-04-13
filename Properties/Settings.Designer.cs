@@ -300,7 +300,7 @@ namespace Server.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://www.metathought.co.za/smsservice.asmx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.lindenlifesaving.co.za/sms/smsservice.asmx")]
         public string Server_StatusChecker_SMSService {
             get {
                 return ((string)(this["Server_StatusChecker_SMSService"]));
