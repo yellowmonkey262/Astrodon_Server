@@ -40,7 +40,11 @@ namespace Server
 
         private void timer3_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (DateTime.Now.Hour != 17) { SendImmediateLetters(); }
+            if (DateTime.Now.Hour != 17)
+            {
+                SendImmediateLetters();
+                SendBulkMails(true, false);
+            }
         }
 
         private void timer2_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -100,7 +104,7 @@ namespace Server
                 {
                     SendStatements();
                     SendLetters();
-                    SendBulkMails();
+                    SendBulkMails(true, true);
                     Purge();
                     updTrust.Update();
                 }
@@ -227,9 +231,9 @@ namespace Server
             return message;
         }
 
-        private String OrdinaryMessage(String accNumber, String debtorEmail)
+        private String OrdinaryMessage(String accNumber, String debtorEmail, bool rental = false)
         {
-            String message = "Dear Owner," + Environment.NewLine + Environment.NewLine;
+            String message = "Dear " + (rental ? "tenant" : "owner") + "," + Environment.NewLine + Environment.NewLine;
             message += "Attached please find your statement." + Environment.NewLine + Environment.NewLine;
             message += "Account #: " + accNumber + " For any queries on your statement, please email:" + debtorEmail + Environment.NewLine + Environment.NewLine;
             message += "Do not reply to this e-mail address" + Environment.NewLine + Environment.NewLine;
@@ -437,7 +441,7 @@ namespace Server
                         String[] email1 = qDR["email1"].ToString().Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
                         String sentDate1 = qDR["sentDate1"].ToString();
                         String actFile = qDR["fileName"].ToString();
-
+                        bool isRentalStatement = actFile.ToUpper().EndsWith("_R.PDF");
                         String fileName = GetAttachment(actFile, true);
                         String actFile2 = actFile;
                         String debtorEmail = qDR["debtorEmail"].ToString();
@@ -459,7 +463,7 @@ namespace Server
                             String[] attach = attachments.ToArray();
                             if (attach.Length > 0)
                             {
-                                if (MailSender.SendMail("noreply@astrodon.co.za", email1, debtorEmail, subject, OrdinaryMessage(accNo, debtorEmail), false, out status, attach))
+                                if (MailSender.SendMail("noreply@astrodon.co.za", email1, debtorEmail, subject, OrdinaryMessage(accNo, debtorEmail, isRentalStatement), false, out status, attach))
                                 {
                                     if (!String.IsNullOrEmpty(status)) { RaiseEvent(status); }
                                     String update1 = "UPDATE tblStatementRun SET sentDate1 = getDate(), errorMessage = 'Processed & Sent' WHERE id = " + id;
@@ -858,10 +862,11 @@ namespace Server
             }
         }
 
-        public void SendBulkMails()
+        public void SendBulkMails(bool flagQueued = false, bool queued = false)
         {
             String mailQuery = "SELECT msg.id, msg.fromAddress, b.Code, b.DataPath, msg.incBCC, msg.bccAddy, msg.subject, msg.message, msg.billBuilding, msg.billAmount FROM tblMsg AS msg ";
-            mailQuery += " INNER JOIN tblBuildings AS b ON msg.buildingID = b.id WHERE (msg.queue = 'True') ";
+            mailQuery += " INNER JOIN tblBuildings AS b ON msg.buildingID = b.id WHERE (msg.id IN (SELECT DISTINCT msgID FROM tblMsgRecipients WHERE(sentDate IS NULL))) ";
+            if (flagQueued) { mailQuery += " AND msg.queue = '" + queued + "'"; }
             DataHandler dh = new DataHandler();
             String status = String.Empty;
             DataSet ds = DataHandler.getData(mailQuery, out status);
@@ -897,7 +902,7 @@ namespace Server
                         }
                     }
                     String billableCustomersQuery = "SELECT distinct accNo FROM tblMsgRecipients WHERE billCustomer = 'True' and msgID = " + msgID.ToString();
-                    String allRecipientsQuery = "SELECT id, accNo, recipient FROM tblMsgRecipients WHERE msgID = " + msgID.ToString();
+                    String allRecipientsQuery = "SELECT id, accNo, recipient FROM tblMsgRecipients WHERE sentDate is null AND msgID = " + msgID.ToString();
                     DataSet billableCustomers = DataHandler.getData(billableCustomersQuery, out status);
                     DataSet receivers = DataHandler.getData(allRecipientsQuery, out status);
                     Dictionary<String, bool> emails = new Dictionary<string, bool>();
