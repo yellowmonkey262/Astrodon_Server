@@ -913,27 +913,25 @@ namespace Server
                             String id = rrece["id"].ToString();
                             String[] emailAddys = rrece["recipient"].ToString().Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
                             bool success = MailSender.SendMail(fromAddress, emailAddys, subject, message, false, false, false, out status, attachments);
-                            if (success)
-                            {
-                                String updQuery = "UPDATE tblMsgRecipients SET sentDate = '" + DateTime.Now.ToString() + "' WHERE id = " + id;
-                                DataHandler.setData(updQuery, out status);
-                            }
-                            RaiseEvent(String.Join(";", emailAddys) + " - " + success.ToString());
-                            try
-                            {
-                                emails.Add(rrece["accNo"].ToString(), success);
-                            }
-                            catch { }
+                            String updQuery = "UPDATE tblMsgRecipients SET sentDate = '" + DateTime.Now.ToString() + "' WHERE id = " + id;
+                            RaiseEvent(String.Join(";", emailAddys) + " - " + status);
+                            DataHandler.setData(updQuery, out status);
+                            if (status != "") { RaiseEvent(updQuery + " - " + status); }
+                            try { emails.Add(rrece["accNo"].ToString(), success); } catch { }
                         }
+                        String bulkUpdateQuery = "UPDATE tblMsgRecipients SET sentDate = '" + DateTime.Now.ToString() + "' WHERE msgID = " + msgID.ToString();
+                        DataHandler.setData(bulkUpdateQuery, out status);
+                        if (status != "") { RaiseEvent(bulkUpdateQuery + " - " + status); }
                     }
+
                     String updateQuery = "UPDATE tblMsg SET queue = 'False' WHERE id = " + msgID.ToString();
                     DataHandler.setData(updateQuery, out status);
                     message += Environment.NewLine + Environment.NewLine;
                     message += "Send status:" + Environment.NewLine + Environment.NewLine;
-                    foreach (KeyValuePair<String, bool> statuses in emails)
-                    {
-                        message += statuses.Key + " = " + statuses.Value.ToString() + Environment.NewLine;
-                    }
+                    var builder = new System.Text.StringBuilder();
+                    builder.Append(message);
+                    foreach (KeyValuePair<String, bool> statuses in emails) { builder.Append(statuses.Key + " = " + statuses.Value.ToString() + Environment.NewLine); }
+                    message = builder.ToString();
                     if (incBCC) { MailSender.SendMail(fromAddress, new String[] { bccAddy }, subject, message, false, false, false, out status, attachments); }
                 }
             }
