@@ -40,11 +40,13 @@ namespace Server
 
         private void timer3_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            timer3.Enabled = false;
             if (DateTime.Now.Hour != 17)
             {
                 SendImmediateLetters();
                 SendBulkMails(true, false);
             }
+            timer3.Enabled = true;
         }
 
         private void timer2_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -910,14 +912,18 @@ namespace Server
                     {
                         foreach (DataRow rrece in receivers.Tables[0].Rows)
                         {
-                            String id = rrece["id"].ToString();
-                            String[] emailAddys = rrece["recipient"].ToString().Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-                            bool success = MailSender.SendMail(fromAddress, emailAddys, subject, message, false, false, false, out status, attachments);
-                            String updQuery = "UPDATE tblMsgRecipients SET sentDate = '" + DateTime.Now.ToString() + "' WHERE id = " + id;
-                            RaiseEvent(String.Join(";", emailAddys) + " - " + status);
-                            DataHandler.setData(updQuery, out status);
-                            if (status != "") { RaiseEvent(updQuery + " - " + status); }
-                            try { emails.Add(rrece["accNo"].ToString(), success); } catch { }
+                            try
+                            {
+                                String id = rrece["id"].ToString();
+                                String[] emailAddys = rrece["recipient"].ToString().Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+                                bool success = MailSender.SendMail(fromAddress, emailAddys, subject, message, false, false, false, out status, attachments);
+                                String updQuery = "UPDATE tblMsgRecipients SET sentDate = '" + DateTime.Now.ToString() + "' WHERE id = " + id;
+                                RaiseEvent(String.Join(";", emailAddys) + " - " + status);
+                                DataHandler.setData(updQuery, out status);
+                                if (status != "") { RaiseEvent(updQuery + " - " + status); }
+                                try { emails.Add(rrece["accNo"].ToString(), success); } catch { }
+                            }
+                            catch { }
                         }
                         String bulkUpdateQuery = "UPDATE tblMsgRecipients SET sentDate = '" + DateTime.Now.ToString() + "' WHERE msgID = " + msgID.ToString();
                         DataHandler.setData(bulkUpdateQuery, out status);
