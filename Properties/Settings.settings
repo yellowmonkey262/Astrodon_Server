@@ -39,13 +39,13 @@
       <Value Profile="(Default)">C:\Inetpub\FileImports\</Value>
     </Setting>
     <Setting Name="rentPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">PROREN14</Value>
+      <Value Profile="(Default)">PROREN19</Value>
     </Setting>
     <Setting Name="trustPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">TRUST14</Value>
+      <Value Profile="(Default)">TRUST19</Value>
     </Setting>
     <Setting Name="astrodonPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">ASTROD14</Value>
+      <Value Profile="(Default)">ASTROD19</Value>
     </Setting>
     <Setting Name="MailUser" Type="System.String" Scope="User">
       <Value Profile="(Default)">noreply@astrodon.co.za</Value>
@@ -62,6 +62,12 @@
     <Setting Name="SMSPassword" Type="System.String" Scope="User">
       <Value Profile="(Default)">[sms@66r94e!@#]</Value>
     </Setting>
+    <Setting Name="statementrunning" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Server_StatusChecker_SMSService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://www.lindenlifesaving.co.za/sms/smsservice.asmx</Value>
+    </Setting>
     <Setting Name="AstrodonConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
@@ -77,12 +83,6 @@
   &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=STEPHEN-PC\MTDNDSQL;Initial Catalog=Astrodon;Persist Security Info=True;User ID=sa;Password=m3t@p@$$</Value>
-    </Setting>
-    <Setting Name="statementrunning" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="Server_StatusChecker_SMSService" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">http://www.lindenlifesaving.co.za/sms/smsservice.asmx</Value>
     </Setting>
   </Settings>
 </SettingsFile>

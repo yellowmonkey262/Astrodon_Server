@@ -110,7 +110,7 @@ namespace Server
                                 //verify with Sheldon / Tertia
                                 try
                                 {
-                                    String pastelReturn = frmMain.pastel.PostBatch(DateTime.Parse(dr["sent"].ToString()), int.Parse(bStuff[0]), "CENTRE18", bStuff[1], 5,
+                                    String pastelReturn = frmMain.pastel.PostBatch(DateTime.Parse(dr["sent"].ToString()), int.Parse(bStuff[0]), "CENTRE19", bStuff[1], 5,
                                         int.Parse(bStuff[2]), bStuff[3], dr["customer"].ToString(), bStuff[4], "9250000", reference, description, amt, trustAcc, "", out pastelString);
                                 }
                                 catch { }

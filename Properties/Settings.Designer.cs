@@ -12,7 +12,7 @@ namespace Server.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "12.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -169,7 +169,7 @@ namespace Server.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("PROREN14")]
+        [global::System.Configuration.DefaultSettingValueAttribute("PROREN19")]
         public string rentPath {
             get {
                 return ((string)(this["rentPath"]));
@@ -181,7 +181,7 @@ namespace Server.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("TRUST14")]
+        [global::System.Configuration.DefaultSettingValueAttribute("TRUST19")]
         public string trustPath {
             get {
                 return ((string)(this["trustPath"]));
@@ -193,7 +193,7 @@ namespace Server.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ASTROD14")]
+        [global::System.Configuration.DefaultSettingValueAttribute("ASTROD19")]
         public string astrodonPath {
             get {
                 return ((string)(this["astrodonPath"]));
@@ -263,28 +263,6 @@ namespace Server.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=SERVER2\\SQLEXPRESS;Initial Catalog=Astrodon;Persist Security Info=Tru" +
-            "e;User ID=sa;Password=sa")]
-        public string AstrodonConnectionString {
-            get {
-                return ((string)(this["AstrodonConnectionString"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=STEPHEN-PC\\MTDNDSQL;Initial Catalog=Astrodon;Persist Security Info=Tr" +
-            "ue;User ID=sa;Password=m3t@p@$$")]
-        public string AstrodonConnectionString1 {
-            get {
-                return ((string)(this["AstrodonConnectionString1"]));
-            }
-        }
-        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
@@ -304,6 +282,28 @@ namespace Server.Properties {
         public string Server_StatusChecker_SMSService {
             get {
                 return ((string)(this["Server_StatusChecker_SMSService"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=SERVER2\\SQLEXPRESS;Initial Catalog=Astrodon;Persist Security Info=Tru" +
+            "e;User ID=sa;Password=sa")]
+        public string AstrodonConnectionString {
+            get {
+                return ((string)(this["AstrodonConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=STEPHEN-PC\\MTDNDSQL;Initial Catalog=Astrodon;Persist Security Info=Tr" +
+            "ue;User ID=sa;Password=m3t@p@$$")]
+        public string AstrodonConnectionString1 {
+            get {
+                return ((string)(this["AstrodonConnectionString1"]));
             }
         }
     }

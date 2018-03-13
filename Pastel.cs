@@ -57,7 +57,10 @@ namespace Server
                     Server.Properties.Settings.Default.rentPath = rental;
                     saveMe = true;
                 }
-                if (saveMe) { Server.Properties.Settings.Default.Save(); }
+                if (saveMe)
+                {
+                    Server.Properties.Settings.Default.Save();
+                }
             }
         }
 

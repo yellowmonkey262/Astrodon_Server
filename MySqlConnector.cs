@@ -371,6 +371,21 @@ namespace Server
             return SetData(query, null, out status);
         }
 
+        public bool FindFile(String fileName)
+        {
+            String query = String.Format("SELECT d.file FROM tx_astro_docs d where d.file = '{0}'", fileName);
+            String status = "";
+            DataSet ds = GetData(query, null, out status);
+            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public DataSet GetData(String query, Dictionary<String, Object> sqlParms, out String status)
         {
             DataSet ds = new DataSet();

@@ -223,5 +223,17 @@ namespace Server
         {
             pastel.runRental();
         }
+
+        private void wARNINGFileDeletionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Sftp client = new Sftp();
+            client.MessageHandler += Client_MessageHandler;
+            client.ClearFiles();
+        }
+
+        private void Client_MessageHandler(object sender, SqlArgs e)
+        {
+            SetText(e.msgArgs);
+        }
     }
 }

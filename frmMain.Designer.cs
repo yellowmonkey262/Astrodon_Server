@@ -39,9 +39,10 @@
             this.purgeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sendEmailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.offAdminPurgeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wARNINGForceRentalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stephenUploadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.wARNINGForceRentalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wARNINGFileDeletionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -100,7 +101,8 @@
             this.purgeToolStripMenuItem,
             this.sendEmailsToolStripMenuItem,
             this.offAdminPurgeToolStripMenuItem,
-            this.wARNINGForceRentalToolStripMenuItem});
+            this.wARNINGForceRentalToolStripMenuItem,
+            this.wARNINGFileDeletionToolStripMenuItem});
             this.adminToolStripMenuItem.Name = "adminToolStripMenuItem";
             this.adminToolStripMenuItem.Size = new System.Drawing.Size(55, 20);
             this.adminToolStripMenuItem.Text = "Admin";
@@ -175,6 +177,13 @@
             this.offAdminPurgeToolStripMenuItem.Text = "Off admin purge";
             this.offAdminPurgeToolStripMenuItem.Click += new System.EventHandler(this.offAdminPurgeToolStripMenuItem_Click);
             // 
+            // wARNINGForceRentalToolStripMenuItem
+            // 
+            this.wARNINGForceRentalToolStripMenuItem.Name = "wARNINGForceRentalToolStripMenuItem";
+            this.wARNINGForceRentalToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.wARNINGForceRentalToolStripMenuItem.Text = "WARNING : Force Rental";
+            this.wARNINGForceRentalToolStripMenuItem.Click += new System.EventHandler(this.wARNINGForceRentalToolStripMenuItem_Click);
+            // 
             // clearScreenToolStripMenuItem
             // 
             this.clearScreenToolStripMenuItem.Name = "clearScreenToolStripMenuItem";
@@ -189,12 +198,12 @@
             this.stephenUploadToolStripMenuItem.Text = "Stephen - Upload";
             this.stephenUploadToolStripMenuItem.Click += new System.EventHandler(this.stephenUploadToolStripMenuItem_Click);
             // 
-            // wARNINGForceRentalToolStripMenuItem
+            // wARNINGFileDeletionToolStripMenuItem
             // 
-            this.wARNINGForceRentalToolStripMenuItem.Name = "wARNINGForceRentalToolStripMenuItem";
-            this.wARNINGForceRentalToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.wARNINGForceRentalToolStripMenuItem.Text = "WARNING : Force Rental";
-            this.wARNINGForceRentalToolStripMenuItem.Click += new System.EventHandler(this.wARNINGForceRentalToolStripMenuItem_Click);
+            this.wARNINGFileDeletionToolStripMenuItem.Name = "wARNINGFileDeletionToolStripMenuItem";
+            this.wARNINGFileDeletionToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.wARNINGFileDeletionToolStripMenuItem.Text = "WARNING: File Deletion";
+            this.wARNINGFileDeletionToolStripMenuItem.Click += new System.EventHandler(this.wARNINGFileDeletionToolStripMenuItem_Click);
             // 
             // frmMain
             // 
@@ -239,6 +248,7 @@
         private System.Windows.Forms.ToolStripMenuItem stephenUploadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem offAdminPurgeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wARNINGForceRentalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem wARNINGFileDeletionToolStripMenuItem;
     }
 }
 

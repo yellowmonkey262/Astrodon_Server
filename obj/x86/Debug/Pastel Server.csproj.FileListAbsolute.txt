@@ -1,0 +1,18 @@
+C:\Users\stephenm\Downloads\Astrodon_Server-master\Astrodon_Server-master\bin\Debug\Server.exe.config
+C:\Users\stephenm\Downloads\Astrodon_Server-master\Astrodon_Server-master\bin\Debug\Server.exe
+C:\Users\stephenm\Downloads\Astrodon_Server-master\Astrodon_Server-master\bin\Debug\Server.pdb
+C:\Users\stephenm\Downloads\Astrodon_Server-master\Astrodon_Server-master\bin\Debug\itextsharp.dll
+C:\Users\stephenm\Downloads\Astrodon_Server-master\Astrodon_Server-master\bin\Debug\itextsharp.pdfa.dll
+C:\Users\stephenm\Downloads\Astrodon_Server-master\Astrodon_Server-master\bin\Debug\itextsharp.xtra.dll
+C:\Users\stephenm\Downloads\Astrodon_Server-master\Astrodon_Server-master\bin\Debug\MySql.Data.dll
+C:\Users\stephenm\Downloads\Astrodon_Server-master\Astrodon_Server-master\bin\Debug\OpenPop.dll
+C:\Users\stephenm\Downloads\Astrodon_Server-master\Astrodon_Server-master\bin\Debug\Renci.SshNet.dll
+C:\Users\stephenm\Downloads\Astrodon_Server-master\Astrodon_Server-master\obj\x86\Debug\Server.frmCustomerList.resources
+C:\Users\stephenm\Downloads\Astrodon_Server-master\Astrodon_Server-master\obj\x86\Debug\Server.frmMain.resources
+C:\Users\stephenm\Downloads\Astrodon_Server-master\Astrodon_Server-master\obj\x86\Debug\Server.frmSettings.resources
+C:\Users\stephenm\Downloads\Astrodon_Server-master\Astrodon_Server-master\obj\x86\Debug\Server.frmSMS.resources
+C:\Users\stephenm\Downloads\Astrodon_Server-master\Astrodon_Server-master\obj\x86\Debug\Server.frmUpdateBuilding.resources
+C:\Users\stephenm\Downloads\Astrodon_Server-master\Astrodon_Server-master\obj\x86\Debug\Server.Properties.Resources.resources
+C:\Users\stephenm\Downloads\Astrodon_Server-master\Astrodon_Server-master\obj\x86\Debug\Pastel Server.csproj.GenerateResource.Cache
+C:\Users\stephenm\Downloads\Astrodon_Server-master\Astrodon_Server-master\obj\x86\Debug\Server.exe
+C:\Users\stephenm\Downloads\Astrodon_Server-master\Astrodon_Server-master\obj\x86\Debug\Server.pdb
