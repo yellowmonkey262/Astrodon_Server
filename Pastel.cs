@@ -200,7 +200,7 @@ namespace Server
                         strIn = period + "|" + trnDate + "|G|" + trustAcc + "|" + reference + "|" + desc + "|" + postAmt + "|0|0|A|||0|0|9320000|1|1";
                         returner = PostBatch(Server.Properties.Settings.Default.trustPath, strIn, 5);
                         if (returner == "0") { count += 1; }
-                        strIn = period + "|" + trnDate + "|G|8100000|" + reference + "|" + desc + "|" + postAmt + "|1|0|A|||0|0|1085000|1|1";
+                        strIn = period + "|" + trnDate + "|G|8100000|" + reference + "|" + desc + "|" + postAmt + "|14|0|A|||0|0|1085000|1|1";
                         returner = PostBatch(Server.Properties.Settings.Default.astrodonPath, strIn, 5);
                         if (returner == "0") { count += 1; }
                         strIn = myPeriod + "|" + trnDate + "|G|3200000|" + reference + "|" + desc + "|" + postAmt + "|0|0|A|||0|0|" + buildContra + "|1|1";
@@ -292,7 +292,7 @@ namespace Server
                                     {
                                         double neg = double.Parse(postAmt) * -1;
                                         postAmt = neg.ToString("#0.00");
-                                        StrIn = period + "|" + trnDate + "|G|8100000|" + reference + "|" + desc + "|" + postAmt + "|1|0|A|||0|0|3200000|1|1";
+                                        StrIn = period + "|" + trnDate + "|G|8100000|" + reference + "|" + desc + "|" + postAmt + "|14|0|A|||0|0|3200000|1|1";
                                         if (postAmt != "0.00") { returner = PostBatch(Server.Properties.Settings.Default.astrodonPath, StrIn, 5); }
                                     }
                                     else if (!testDesc.Contains("BRCASH") || !testDesc.Contains("CHQSFEE"))
@@ -320,7 +320,7 @@ namespace Server
                                             if (postAmt != "0.00") { returner = PostBatch(path, StrIn, 5); }
                                         }
                                         String astAcc = (testDesc.Contains("D/") ? "1086000" : "1085000");
-                                        StrIn = period + "|" + trnDate + "|G|8100000|" + reference + "|" + desc + "|" + postAmt + "|1|0|A|||0|0|" + astAcc + "|1|1";
+                                        StrIn = period + "|" + trnDate + "|G|8100000|" + reference + "|" + desc + "|" + postAmt + "|14|0|A|||0|0|" + astAcc + "|1|1";
                                         if (postAmt != "0.00") { returner = PostBatch(Server.Properties.Settings.Default.astrodonPath, StrIn, 5); }
                                     }
                                 }
@@ -345,7 +345,7 @@ namespace Server
                                         if (postAmt != "0.00") { returner = PostBatch(path, StrIn, 5); }
                                     }
                                     String astAcc = (testDesc.Contains("D/") ? "1086000" : "1085000");
-                                    StrIn = period + "|" + trnDate + "|G|8100000|" + reference + "|" + desc + "|" + postAmt + "|1|0|A|||0|0|" + astAcc + "|1|1";
+                                    StrIn = period + "|" + trnDate + "|G|8100000|" + reference + "|" + desc + "|" + postAmt + "|14|0|A|||0|0|" + astAcc + "|1|1";
                                     if (postAmt != "0.00") { returner = PostBatch(Server.Properties.Settings.Default.astrodonPath, StrIn, 5); }
                                 }
                             }
@@ -622,12 +622,12 @@ namespace Server
                             {
                                 if (!una && path == Server.Properties.Settings.Default.astrodonPath)
                                 {
-                                    StrIn = period + "|" + trnDate + "|G|" + acc + "|" + reference + "|" + desc + "|" + postAmt + "|1|0|A|||0|0|8100000|1|1";
+                                    StrIn = period + "|" + trnDate + "|G|" + acc + "|" + reference + "|" + desc + "|" + postAmt + "|14|0|A|||0|0|8100000|1|1";
                                     if (postAmt != "0.00") { returner = PostBatch(path, StrIn, 5); }
                                     if (returner.Split(new String[] { "|" }, StringSplitOptions.None)[0] != "0")
                                     {
                                         String display = returner.Replace("|", "-");
-                                        StrIn = period + "|" + trnDate + "|G|9990000|" + reference + "|" + desc + "|" + postAmt + "|1|0|A|||0|0|8100000|1|1";
+                                        StrIn = period + "|" + trnDate + "|G|9990000|" + reference + "|" + desc + "|" + postAmt + "|14|0|A|||0|0|8100000|1|1";
                                         if (postAmt != "0.00") { returner = PostBatch(path, StrIn, 5); }
                                     }
                                 }

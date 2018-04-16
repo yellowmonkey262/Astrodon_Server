@@ -86,8 +86,6 @@ namespace Server
             DateTime now = DateTime.Now;
             if (now >= nextCheckTime)
             {
-                StatusChecker.SMSService checker = new StatusChecker.SMSService();
-
                 if (NewMessageEvent != null) { NewMessageEvent(this, new MessageArgs("Checking sms status: " + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"))); }
                 if (dsMsg != null && dsMsg.Tables.Count > 0 && dsMsg.Tables[0].Rows.Count > 0)
                 {
@@ -95,27 +93,30 @@ namespace Server
                     {
                         String batchID = dr["batchID"].ToString().Replace("\n", "");
                         String number = dr["number"].ToString().Replace("\n", "");
-                        String msgStatus = checker.GetStatus(batchID);
-                        //String msgStatus = dr["bsstatus"].ToString();
-                        if (!String.IsNullOrEmpty(msgStatus))
+                        using (StatusChecker.SMSService checker = new StatusChecker.SMSService())
                         {
-                            if (msgStatus == "10" || msgStatus == "11")
+                            String msgStatus = checker.GetStatus(batchID);
+                            //String msgStatus = dr["bsstatus"].ToString();
+                            if (!String.IsNullOrEmpty(msgStatus))
                             {
-                                String[] bStuff = GetBuildingStuff(dr["building"].ToString());
-                                String pastelString = "";
-                                String reference = dr["reference"].ToString();
-                                String description = dr["message"].ToString();
-                                String trustAcc = "1115000";
-                                String amt = "2.00";
-                                //verify with Sheldon / Tertia
-                                try
+                                if (msgStatus == "10" || msgStatus == "11")
                                 {
-                                    String pastelReturn = frmMain.pastel.PostBatch(DateTime.Parse(dr["sent"].ToString()), int.Parse(bStuff[0]), "CENTRE19", bStuff[1], 5,
-                                        int.Parse(bStuff[2]), bStuff[3], dr["customer"].ToString(), bStuff[4], "9250000", reference, description, amt, trustAcc, "", out pastelString);
+                                    String[] bStuff = GetBuildingStuff(dr["building"].ToString());
+                                    String pastelString = "";
+                                    String reference = dr["reference"].ToString();
+                                    String description = dr["message"].ToString();
+                                    String trustAcc = "1115000";
+                                    String amt = "5.00";
+                                    //verify with Sheldon / Tertia
+                                    try
+                                    {
+                                        String pastelReturn = frmMain.pastel.PostBatch(DateTime.Parse(dr["sent"].ToString()), int.Parse(bStuff[0]), "CENTRE19", bStuff[1], 5,
+                                            int.Parse(bStuff[2]), bStuff[3], dr["customer"].ToString(), bStuff[4], "9250000", reference, description, amt, trustAcc, "", out pastelString);
+                                    }
+                                    catch { }
                                 }
-                                catch { }
+                                UpdateMessage(batchID, getStatus(int.Parse(msgStatus)), DateTime.Now, 1);
                             }
-                            UpdateMessage(batchID, getStatus(int.Parse(msgStatus)), DateTime.Now, 1);
                         }
                     }
                 }
@@ -182,8 +183,6 @@ namespace Server
 
         private void ForceQueryStatus(DataSet dsMsg)
         {
-            StatusChecker.SMSService checker = new StatusChecker.SMSService();
-
             if (NewMessageEvent != null) { NewMessageEvent(this, new MessageArgs("Checking sms status: " + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"))); }
             if (dsMsg != null && dsMsg.Tables.Count > 0 && dsMsg.Tables[0].Rows.Count > 0)
             {
@@ -191,27 +190,30 @@ namespace Server
                 {
                     String batchID = dr["batchID"].ToString();
                     String number = dr["number"].ToString();
-                    String msgStatus = checker.GetStatus(batchID);
-                    //String msgStatus = dr["bsstatus"].ToString();
-                    if (!String.IsNullOrEmpty(msgStatus))
+                    using (StatusChecker.SMSService checker = new StatusChecker.SMSService())
                     {
-                        if (msgStatus == "10" || msgStatus == "11")
+                        String msgStatus = checker.GetStatus(batchID);
+                        //String msgStatus = dr["bsstatus"].ToString();
+                        if (!String.IsNullOrEmpty(msgStatus))
                         {
-                            String[] bStuff = GetBuildingStuff(dr["building"].ToString());
-                            String pastelString = "";
-                            String reference = dr["reference"].ToString();
-                            String description = dr["message"].ToString();
-                            String trustAcc = "1115000";
-                            String amt = "2.00";
-                            //verify with Sheldon / Tertia
-                            try
+                            if (msgStatus == "10" || msgStatus == "11")
                             {
-                                String pastelReturn = frmMain.pastel.PostBatch(DateTime.Parse(dr["sent"].ToString()), int.Parse(bStuff[0]), "CENTRE16", bStuff[1], 5,
-                                    int.Parse(bStuff[2]), bStuff[3], dr["customer"].ToString(), bStuff[4], "9250000", reference, description, amt, trustAcc, "", out pastelString);
+                                String[] bStuff = GetBuildingStuff(dr["building"].ToString());
+                                String pastelString = "";
+                                String reference = dr["reference"].ToString();
+                                String description = dr["message"].ToString();
+                                String trustAcc = "1115000";
+                                String amt = "5.00";
+                                //verify with Sheldon / Tertia
+                                try
+                                {
+                                    String pastelReturn = frmMain.pastel.PostBatch(DateTime.Parse(dr["sent"].ToString()), int.Parse(bStuff[0]), "CENTRE19", bStuff[1], 5,
+                                        int.Parse(bStuff[2]), bStuff[3], dr["customer"].ToString(), bStuff[4], "9250000", reference, description, amt, trustAcc, "", out pastelString);
+                                }
+                                catch { }
                             }
-                            catch { }
+                            UpdateMessage(batchID, getStatus(int.Parse(msgStatus)), DateTime.Now, 1);
                         }
-                        UpdateMessage(batchID, getStatus(int.Parse(msgStatus)), DateTime.Now, 1);
                     }
                 }
             }
