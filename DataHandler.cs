@@ -7,8 +7,9 @@ namespace Server
 {
     public class DataHandler
     {
-        public const String connString = "Data Source=SERVER-SQL;Initial Catalog=Astrodon;Persist Security Info=True;User ID=sa;Password=@str0d0n";
+        public const String connString1 = "Data Source=SERVER-SQL;Initial Catalog=Astrodon;Persist Security Info=True;User ID=sa;Password=@str0d0n";
         public const String connString2 = "Data Source=STEPHEN-PC\\MTDNDSQL;Initial Catalog=Astrodon;Persist Security Info=True;User ID=sa;Password=m3t@p@$$"; //Local
+        public const String connString = "Data Source=.;Initial Catalog=Astrodon;Persist Security Info=True;User ID=sa;Password=1q2w#E$R"; //Local
         private static SqlConnection sqlConnection1;
 
         private static SqlCommand GetCommand(String sqlString)

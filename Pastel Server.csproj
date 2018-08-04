@@ -39,7 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Interop.PasSDK">
-      <HintPath>..\..\Astrodon_Desktop\DLL\Interop.PasSDK.dll</HintPath>
+      <HintPath>..\Lib\Interop.PasSDK.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="itextsharp">
