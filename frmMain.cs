@@ -134,28 +134,11 @@ namespace Server
             }
         }
 
-        private void searchEmailsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            List<Customer> customers = pastel.GetCustomers(false, null);
-            String reportPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reports", "astrodon email addresses.csv");
-            StreamWriter writer = new StreamWriter(reportPath);
-            foreach (Customer c in customers)
-            {
-                String line = c.accNumber + ",";
-                foreach (String email in c.Email)
-                {
-                    if (!String.IsNullOrEmpty(email)) { line += email; }
-                }
-                writer.WriteLine(line);
-            }
-            writer.Close();
-            MessageBox.Show("Done");
-        }
+  
 
         private void testUploadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             statementRunner.SendStatements();
-            statementRunner.UploadFiles();
         }
 
         private void sendSMSToolStripMenuItem_Click(object sender, EventArgs e)
@@ -181,7 +164,6 @@ namespace Server
 
         private void updateALLWebToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            statementRunner.UpdateCustomers();
         }
 
         private void purgeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -209,14 +191,11 @@ namespace Server
 
         private void stephenUploadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            statementRunner.UploadFiles(DateTime.Now.AddDays(-1));
         }
 
         private void offAdminPurgeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Purger purger = new Purger();
-            purger.TransferFiles();
-            MessageBox.Show("Complete");
+         
         }
 
         private void wARNINGForceRentalToolStripMenuItem_Click(object sender, EventArgs e)
@@ -226,14 +205,8 @@ namespace Server
 
         private void wARNINGFileDeletionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Sftp client = new Sftp();
-            client.MessageHandler += Client_MessageHandler;
-            client.ClearFiles();
+          
         }
 
-        private void Client_MessageHandler(object sender, SqlArgs e)
-        {
-            SetText(e.msgArgs);
-        }
     }
 }

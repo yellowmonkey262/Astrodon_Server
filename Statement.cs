@@ -114,45 +114,6 @@ namespace Server
             timer.Enabled = true;
         }
 
-        public void UpdateCustomers()
-        {
-            String buildQ = "SELECT Building, Code, DataPath FROM tblBuildings WHERE isBuilding = 'True' ORDER by Building";
-            String status = String.Empty;
-            DataSet ds = DataHandler.getData(buildQ, out status);
-            List<CustomerConstruct> allCustomers = new List<CustomerConstruct>();
-            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-            {
-                MySqlConnector mySql = new MySqlConnector();
-                mySql.ToggleConnection(true);
-                foreach (DataRow dr in ds.Tables[0].Rows)
-                {
-                    String buildingName = dr["Building"].ToString();
-                    String buildingAbbr = dr["Code"].ToString();
-                    List<Customer> customers = frmMain.pastel.AddCustomers("", dr["DataPath"].ToString());
-                    foreach (Customer c in customers)
-                    {
-                        CustomerConstruct cc = new CustomerConstruct();
-                        cc.buildingName = buildingName;
-                        cc.buildingAbbr = buildingAbbr;
-                        cc.acc = c.accNumber;
-                        cc.emails = c.Email;
-                        allCustomers.Add(cc);
-                    }
-                }
-                RaiseEvent(allCustomers.Count.ToString() + " customers retrieved from pastel");
-                mySql.ToggleConnection(true);
-                int updateCount = 0;
-                foreach (CustomerConstruct cc in allCustomers)
-                {
-                    mySql.InsertCustomer(cc.buildingName, cc.buildingAbbr, cc.acc, cc.emails, out status);
-                    if (status != "OK") { RaiseEvent(status); } else { updateCount++; }
-                }
-                mySql.ToggleConnection(false);
-                RaiseEvent(updateCount.ToString() + " customers updated");
-            }
-            RaiseEvent("Customer update complete");
-        }
-
         public void Purge()
         {
             String statementFolder = "C:\\Pastel11\\Debtors System\\statements";
@@ -217,12 +178,15 @@ namespace Server
             RaiseEvent("Customer list complete");
         }
 
-        private String CustomerMessage(String accNumber, String debtorEmail)
+        private String CustomerMessage(String accNumber, String debtorEmail, string statmentUrl)
         {
             String message = "Dear Owner," + Environment.NewLine + Environment.NewLine;
-            message += "Due to a technical error, please find attached your amended statement." + Environment.NewLine;
+            message += "Due to a technical error, please download your amended statement from the link below." + Environment.NewLine;
+            message += statmentUrl + Environment.NewLine;
             message += "We apologise for any inconvenience caused due to the error." + Environment.NewLine + Environment.NewLine;
             message += "Remember, you can access your statements online. Paste the link below into your browser to access your online statements." + Environment.NewLine + Environment.NewLine;
+
+
             message += "www.astrodon.co.za" + Environment.NewLine + Environment.NewLine;
             message += "Regards" + Environment.NewLine + Environment.NewLine;
             message += "Astrodon (Pty) Ltd" + Environment.NewLine;
@@ -233,10 +197,13 @@ namespace Server
             return message;
         }
 
-        private String OrdinaryMessage(String accNumber, String debtorEmail, bool rental = false)
+        private String OrdinaryMessage(String accNumber, String debtorEmail, string statmentUrl, bool rental = false)
         {
             String message = "Dear " + (rental ? "tenant" : "owner") + "," + Environment.NewLine + Environment.NewLine;
-            message += "Attached please find your statement." + Environment.NewLine + Environment.NewLine;
+            message += "Please download your statement from the link below." + Environment.NewLine + Environment.NewLine;
+
+            message += statmentUrl + Environment.NewLine + Environment.NewLine;
+
             message += "Account #: " + accNumber + " For any queries on your statement, please email:" + debtorEmail + Environment.NewLine + Environment.NewLine;
             message += "Do not reply to this e-mail address" + Environment.NewLine + Environment.NewLine;
             message += RegisterMessage();
@@ -297,118 +264,7 @@ namespace Server
                 return false;
             }
         }
-
-        public void UploadFiles()
-        {
-            RaiseEvent("Starting upload: " + DateTime.Now.ToString());
-            DataSet dsComplete = GetCompletedStatements();
-            MySqlConnector mySqlConn = new MySqlConnector();
-            mySqlConn.ToggleConnection(true);
-            Sftp ftpClient = new Sftp();
-            ftpClient.ConnectClient();
-
-            if (dsComplete != null && dsComplete.Tables.Count > 0 && dsComplete.Tables[0].Rows.Count > 0)
-            {
-                foreach (DataRow qDR in dsComplete.Tables[0].Rows)
-                {
-                    bool uploaded = false;
-                    while (!uploaded)
-                    {
-                        try
-                        {
-                            String actFile = qDR["fileName"].ToString();
-
-                            String fileName = GetAttachment(actFile, true);
-                            String actFile2 = actFile;
-                            String debtorEmail = qDR["debtorEmail"].ToString();
-                            String accNo = qDR["unit"].ToString();
-                            String attachment = qDR["attachment"].ToString();
-                            String subject = qDR["subject"].ToString();
-                            String[] email1 = qDR["email1"].ToString().Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-                            bool inserted = mySqlConn.InsertStatement(actFile, "Customer Statements", actFile2, accNo, email1);
-                            RaiseEvent("Upload for " + accNo + " " + inserted.ToString());
-
-                            ftpClient.Upload(fileName, actFile2, false);
-                            RaiseEvent("Uploaded " + actFile);
-
-                            List<String> attachments = new List<string>();
-                            attachments.Add(fileName);
-                            if (attachment != "none")
-                            {
-                                String absAttachmentName = GetAttachment(attachment, true);
-                                attachments.Add(absAttachmentName);
-                                mySqlConn.InsertStatement(attachment, "Customer Statements", attachment, accNo, email1);
-                                ftpClient.Upload(absAttachmentName, attachment, false);
-                            }
-                            uploaded = true;
-                        }
-                        catch { }
-                    }
-                }
-            }
-            else
-            {
-                RaiseEvent("No files");
-            }
-            RaiseEvent("Upload completed: " + DateTime.Now.ToString());
-        }
-
-        public void UploadFiles(DateTime filterDate)
-        {
-            RaiseEvent("Starting upload: " + DateTime.Now.ToString());
-            DataSet dsComplete = GetCompletedStatements(filterDate);
-            MySqlConnector mySqlConn = new MySqlConnector();
-            mySqlConn.ToggleConnection(true);
-            Sftp ftpClient = new Sftp();
-            ftpClient.ConnectClient();
-
-            if (dsComplete != null && dsComplete.Tables.Count > 0 && dsComplete.Tables[0].Rows.Count > 0)
-            {
-                foreach (DataRow qDR in dsComplete.Tables[0].Rows)
-                {
-                    bool uploaded = false;
-                    while (!uploaded)
-                    {
-                        try
-                        {
-                            String actFile = qDR["fileName"].ToString();
-
-                            String fileName = GetAttachment(actFile, true);
-                            String actFile2 = actFile;
-                            String debtorEmail = qDR["debtorEmail"].ToString();
-                            String accNo = qDR["unit"].ToString();
-                            String attachment = qDR["attachment"].ToString();
-                            String subject = qDR["subject"].ToString();
-                            String[] email1 = qDR["email1"].ToString().Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-
-                            bool inserted = mySqlConn.InsertStatement(actFile, "Customer Statements", actFile2, accNo, email1);
-                            RaiseEvent("Upload for " + accNo + " " + inserted.ToString());
-
-                            ftpClient.Upload(fileName, actFile2, false);
-                            RaiseEvent("Uploaded " + actFile);
-
-                            List<String> attachments = new List<string>();
-                            attachments.Add(fileName);
-                            if (attachment != "none")
-                            {
-                                String absAttachmentName = GetAttachment(attachment, true);
-                                attachments.Add(absAttachmentName);
-                                mySqlConn.InsertStatement(attachment, "Customer Statements", attachment, accNo, email1);
-                                ftpClient.Upload(absAttachmentName, attachment, false);
-                            }
-                            uploaded = true;
-                        }
-                        catch { }
-                    }
-                }
-            }
-            else
-            {
-                RaiseEvent("No files");
-            }
-            RaiseEvent("Upload completed: " + DateTime.Now.ToString());
-        }
-
+ 
         public void SendStatements()
         {
             isRunning = true;
@@ -444,14 +300,20 @@ namespace Server
                         String sentDate1 = qDR["sentDate1"].ToString();
                         String actFile = qDR["fileName"].ToString();
                         bool isRentalStatement = actFile.ToUpper().EndsWith("_R.PDF");
-                        String fileName = GetAttachment(actFile, true);
+                    
+                         String fileName = GetAttachment(actFile, true);
+
                         String actFile2 = actFile;
                         String debtorEmail = qDR["debtorEmail"].ToString();
                         String accNo = qDR["unit"].ToString();
                         String attachment = qDR["attachment"].ToString();
                         String subject = qDR["subject"].ToString();
+                        String URL = qDR["URL"].ToString();
                         List<String> attachments = new List<string>();
-                        attachments.Add(fileName);
+
+                        if (String.IsNullOrWhiteSpace(URL))
+                           attachments.Add(fileName);
+
                         if (attachment != "none")
                         {
                             String absAttachmentName = GetAttachment(attachment, true);
@@ -465,7 +327,8 @@ namespace Server
                             String[] attach = attachments.ToArray();
                             if (attach.Length > 0)
                             {
-                                if (MailSender.SendMail("noreply@astrodon.co.za", email1, debtorEmail, subject, OrdinaryMessage(accNo, debtorEmail, isRentalStatement), false, out status, attach))
+                                if (MailSender.SendMail("noreply@astrodon.co.za", email1, debtorEmail, subject, 
+                                    OrdinaryMessage(accNo, debtorEmail,URL, isRentalStatement), false, out status, attach))
                                 {
                                     if (!String.IsNullOrEmpty(status)) { RaiseEvent(status); }
                                     String update1 = "UPDATE tblStatementRun SET sentDate1 = getDate(), errorMessage = 'Processed & Sent' WHERE id = " + id;
@@ -503,7 +366,6 @@ namespace Server
             }
             catch { }
             isRunning = false;
-            UploadFiles();
 
             #endregion Old Send
         }
@@ -559,10 +421,6 @@ namespace Server
             DataSet queue = GetQueuedLetters(false);
             if (queue != null && queue.Tables.Count > 0 && queue.Tables[0].Rows.Count > 0)
             {
-                MySqlConnector mySqlConn = new MySqlConnector();
-                Sftp ftpClient = new Sftp();
-                mySqlConn.ToggleConnection(true);
-                ftpClient.ConnectClient();
                 RaiseEvent("Mail count = " + queue.Tables[0].Rows.Count.ToString());
                 foreach (DataRow qDR in queue.Tables[0].Rows)
                 {
@@ -599,15 +457,6 @@ namespace Server
                             files[i] = fileName;
                             String actFileTitle = Path.GetFileNameWithoutExtension(fileName);
                             String actFile = Path.GetFileName(fileName);
-                            try
-                            {
-                                mySqlConn.InsertStatement(actFileTitle, "Customer Statements", actFile, accNo, email1);
-                                ftpClient.Upload(fileName, actFile, false);
-                            }
-                            catch (Exception ex)
-                            {
-                                RaiseEvent("Error: " + ex.Message);
-                            }
                         }
                         if (email1.Length > 0 && String.IsNullOrEmpty(sentDate))
                         {
@@ -649,8 +498,6 @@ namespace Server
                         RaiseEvent(ex.Message);
                     }
                 }
-                mySqlConn.ToggleConnection(false);
-                ftpClient.DisconnectClient();
             }
         }
 
@@ -659,11 +506,6 @@ namespace Server
             DataSet queue = GetQueuedLetters(true);
             if (queue != null && queue.Tables.Count > 0 && queue.Tables[0].Rows.Count > 0)
             {
-                MySqlConnector mySqlConn = new MySqlConnector();
-                mySqlConn.ToggleConnection(true);
-                Sftp ftpClient = new Sftp();
-                ftpClient.ConnectClient();
-                MySqlConnector mysqlConn = new MySqlConnector();
                 RaiseEvent("Mail count = " + queue.Tables[0].Rows.Count.ToString());
                 foreach (DataRow qDR in queue.Tables[0].Rows)
                 {
@@ -700,12 +542,6 @@ namespace Server
                             files[i] = fileName;
                             String actFileTitle = Path.GetFileNameWithoutExtension(fileName);
                             String actFile = Path.GetFileName(fileName);
-                            try
-                            {
-                                mysqlConn.InsertStatement(actFileTitle, "Customer Statements", actFile, accNo, email1);
-                                ftpClient.Upload(fileName, actFile, false);
-                            }
-                            catch { }
                         }
 
                         if (email1.Length > 0 && String.IsNullOrEmpty(sentDate))
@@ -742,8 +578,6 @@ namespace Server
                         RaiseEvent(ex.Message);
                     }
                 }
-                mySqlConn.ToggleConnection(false);
-                ftpClient.DisconnectClient();
             }
         }
 
@@ -781,7 +615,7 @@ namespace Server
                         }
                     }
                     catch { }
-                    String query = "SELECT id, email1, fileName, debtorEmail, sentDate1, unit, attachment, subject FROM tblStatementRun WHERE (sentDate1 is null)";
+                    String query = "SELECT id, email1, fileName, debtorEmail, sentDate1, unit, attachment, subject,URL FROM tblStatementRun WHERE (sentDate1 is null)";
                     ds = DataHandler.getData(query, out status);
                 }
                 catch (InsufficientMemoryException e)

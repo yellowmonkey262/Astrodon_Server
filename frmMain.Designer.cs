@@ -27,7 +27,6 @@
             this.rtfStatus = new System.Windows.Forms.RichTextBox();
             this.btnSettings = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.searchEmailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.adminToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testUploadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sendLettersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,9 +39,8 @@
             this.sendEmailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.offAdminPurgeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wARNINGForceRentalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clearScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stephenUploadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wARNINGFileDeletionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -71,22 +69,13 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.searchEmailsToolStripMenuItem,
             this.adminToolStripMenuItem,
-            this.clearScreenToolStripMenuItem,
-            this.stephenUploadToolStripMenuItem});
+            this.clearScreenToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(805, 24);
             this.menuStrip1.TabIndex = 5;
             this.menuStrip1.Text = "menuStrip1";
-            // 
-            // searchEmailsToolStripMenuItem
-            // 
-            this.searchEmailsToolStripMenuItem.Name = "searchEmailsToolStripMenuItem";
-            this.searchEmailsToolStripMenuItem.Size = new System.Drawing.Size(119, 20);
-            this.searchEmailsToolStripMenuItem.Text = "Generate Email List";
-            this.searchEmailsToolStripMenuItem.Click += new System.EventHandler(this.searchEmailsToolStripMenuItem_Click);
             // 
             // adminToolStripMenuItem
             // 
@@ -184,26 +173,19 @@
             this.wARNINGForceRentalToolStripMenuItem.Text = "WARNING : Force Rental";
             this.wARNINGForceRentalToolStripMenuItem.Click += new System.EventHandler(this.wARNINGForceRentalToolStripMenuItem_Click);
             // 
-            // clearScreenToolStripMenuItem
-            // 
-            this.clearScreenToolStripMenuItem.Name = "clearScreenToolStripMenuItem";
-            this.clearScreenToolStripMenuItem.Size = new System.Drawing.Size(84, 20);
-            this.clearScreenToolStripMenuItem.Text = "Clear Screen";
-            this.clearScreenToolStripMenuItem.Click += new System.EventHandler(this.clearScreenToolStripMenuItem_Click);
-            // 
-            // stephenUploadToolStripMenuItem
-            // 
-            this.stephenUploadToolStripMenuItem.Name = "stephenUploadToolStripMenuItem";
-            this.stephenUploadToolStripMenuItem.Size = new System.Drawing.Size(111, 20);
-            this.stephenUploadToolStripMenuItem.Text = "Stephen - Upload";
-            this.stephenUploadToolStripMenuItem.Click += new System.EventHandler(this.stephenUploadToolStripMenuItem_Click);
-            // 
             // wARNINGFileDeletionToolStripMenuItem
             // 
             this.wARNINGFileDeletionToolStripMenuItem.Name = "wARNINGFileDeletionToolStripMenuItem";
             this.wARNINGFileDeletionToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.wARNINGFileDeletionToolStripMenuItem.Text = "WARNING: File Deletion";
             this.wARNINGFileDeletionToolStripMenuItem.Click += new System.EventHandler(this.wARNINGFileDeletionToolStripMenuItem_Click);
+            // 
+            // clearScreenToolStripMenuItem
+            // 
+            this.clearScreenToolStripMenuItem.Name = "clearScreenToolStripMenuItem";
+            this.clearScreenToolStripMenuItem.Size = new System.Drawing.Size(84, 20);
+            this.clearScreenToolStripMenuItem.Text = "Clear Screen";
+            this.clearScreenToolStripMenuItem.Click += new System.EventHandler(this.clearScreenToolStripMenuItem_Click);
             // 
             // frmMain
             // 
@@ -233,7 +215,6 @@
         private System.Windows.Forms.RichTextBox rtfStatus;
         private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem searchEmailsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem adminToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testUploadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sendSMSToolStripMenuItem;
@@ -245,7 +226,6 @@
         private System.Windows.Forms.ToolStripMenuItem sMSReportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sendEmailsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearScreenToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem stephenUploadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem offAdminPurgeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wARNINGForceRentalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wARNINGFileDeletionToolStripMenuItem;

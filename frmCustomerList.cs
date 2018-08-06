@@ -27,82 +27,6 @@ namespace Server
             webCustomers = new List<WebConstruct>();
         }
 
-        public void GetWebAccounts(String buildingAbbr, bool showMe)
-        {
-            String status = String.Empty;
-            String astroQuery = "SELECT b.name, m.account_no, m.owner_email as email, f.username, f.disable FROM tx_astro_complex b inner join tx_astro_account_user_mapping m";
-            astroQuery += " on m.complex_id = b.uid inner join fe_users f on m.cruser_id = f.uid ";
-            if (!String.IsNullOrEmpty(buildingAbbr)) { astroQuery += " WHERE b.abbr = '" + buildingAbbr + "'"; }
-            astroQuery += " order by b.name, m.account_no";
-            MySqlConnector mySql = new MySqlConnector();
-            DataSet ds = mySql.GetData(astroQuery, null, out status);
-            int webCount = 0;
-            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-            {
-                foreach (DataRow dr in ds.Tables[0].Rows)
-                {
-                    String acc = dr["account_no"].ToString();
-                    bool active = (int.Parse(dr["disable"].ToString()) == 0 ? true : false);
-                    String owner_email = dr["email"].ToString();
-                    String username = dr["username"].ToString();
-                    if (dataCustomers.Keys.Contains(acc))
-                    {
-                        dataCustomers[acc].Web_Email = owner_email;
-                        dataCustomers[acc].Web_User = username;
-                        dataCustomers[acc].Web_User_Active = active;
-                        webCount++;
-                    }
-                }
-            }
-
-            if (showMe) { MessageBox.Show(webCount.ToString() + " customers from web"); }
-        }
-
-        public void GetPastelAccounts(String buildingCode, bool showMe)
-        {
-            String buildQ = "SELECT Building, DataPath FROM tblBuildings ";
-            if (!String.IsNullOrEmpty(buildingCode)) { buildQ += "WHERE code = '" + buildingCode + "'"; }
-            buildQ += " ORDER by Building";
-            String status = String.Empty;
-            DataSet ds = DataHandler.getData(buildQ, out status);
-
-            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-            {
-                MySqlConnector mySql = new MySqlConnector();
-                mySql.ToggleConnection(true);
-
-                foreach (DataRow dr in ds.Tables[0].Rows)
-                {
-                    String buildingName = dr["Building"].ToString();
-
-                    List<Customer> customers = frmMain.pastel.AddCustomers("", dr["DataPath"].ToString());
-
-                    foreach (Customer c in customers)
-                    {
-                        CustomerConstruct cc = new CustomerConstruct();
-                        cc.buildingName = buildingName;
-                        cc.acc = c.accNumber;
-                        cc.emails = c.Email;
-                        allCustomers.Add(cc);
-                    }
-                }
-            }
-            foreach (CustomerConstruct c in allCustomers)
-            {
-                DataConstruct dc = new DataConstruct();
-                dc.Building = c.buildingName;
-                dc.Account = c.acc;
-                String email = String.Empty;
-                foreach (String e in c.emails) { if (!e.Contains("imp.ad-one")) { email += e + ";"; } }
-                dc.Pastel_Emails = email;
-                if (!dataCustomers.Keys.Contains(c.acc))
-                {
-                    dataCustomers.Add(c.acc, dc);
-                }
-            }
-            if (showMe) { MessageBox.Show(dataCustomers.Count.ToString() + " customers retrieved"); }
-        }
-
         private void btnGo_Click(object sender, EventArgs e)
         {
             allCustomers = new List<CustomerConstruct>();
@@ -111,8 +35,6 @@ namespace Server
             String abbr = cmbBuilding.SelectedValue.ToString();
             if (!String.IsNullOrEmpty(abbr))
             {
-                GetPastelAccounts(abbr, true);
-                GetWebAccounts(abbr, true);
                 if (dataCustomers.Count > 0)
                 {
                     BindingSource bs = new BindingSource();
@@ -130,55 +52,9 @@ namespace Server
 
         private void btnAll_Click(object sender, EventArgs e)
         {
-            String pathName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pastelusers.csv");
-            sw = new StreamWriter(pathName);
-            sw.WriteLine("Building,Acc,Emails");
-            allCustomers = new List<CustomerConstruct>();
-            foreach (DataRow dr in this.astrodonDataSet.tblBuildings.Rows)
-            {
-                String abbr = dr["code"].ToString();
-                if (!String.IsNullOrEmpty(abbr))
-                {
-                    GetPastelAccounts(abbr);
-                }
-            }
-            sw.Close();
-
-            MailSender.SendMail("noreply@astrodon.co.za", "stephen@metathought.co.za", "Customer List", "Here it is", false, new String[] { pathName });
+          
         }
 
-        public void GetPastelAccounts(String buildingCode)
-        {
-            String buildQ = "SELECT Building, DataPath FROM tblBuildings ";
-            if (!String.IsNullOrEmpty(buildingCode)) { buildQ += "WHERE code = '" + buildingCode + "'"; }
-            buildQ += " ORDER by Building";
-            String status = String.Empty;
-            DataSet ds = DataHandler.getData(buildQ, out status);
-
-            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-            {
-                MySqlConnector mySql = new MySqlConnector();
-                mySql.ToggleConnection(true);
-                foreach (DataRow dr in ds.Tables[0].Rows)
-                {
-                    String buildingName = dr["Building"].ToString();
-                    List<Customer> customers = frmMain.pastel.AddCustomers("", dr["DataPath"].ToString());
-                    foreach (Customer c in customers)
-                    {
-                        CustomerConstruct cc = new CustomerConstruct();
-                        cc.buildingName = buildingName;
-                        cc.acc = c.accNumber;
-                        cc.emails = c.Email;
-                        String email = "";
-                        foreach (String e in c.Email)
-                        {
-                            email += e + ";";
-                        }
-                        sw.WriteLine(buildingName + "," + c.accNumber + "," + email);
-                    }
-                }
-            }
-        }
 
         private void btnExport_Click(object sender, EventArgs e)
         {

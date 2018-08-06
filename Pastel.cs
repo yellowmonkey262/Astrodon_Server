@@ -1220,26 +1220,6 @@ namespace Server
             return customers;
         }
 
-        public void LoadBuildings()
-        {
-            String status = String.Empty;
-            MySqlConnector mySqlConn = new MySqlConnector();
-            mySqlConn.ToggleConnection(true);
-            String buildingQuery = "SELECT Building, Code, DataPath FROM tblBuildings WHERE (Building NOT LIKE 'ASTRODON%') AND (Building <> 'LETTERS') ORDER BY Building";
-            DataSet dsBuildings = DataHandler.getData(buildingQuery, out status);
-            if (dsBuildings != null && dsBuildings.Tables.Count > 0 && dsBuildings.Tables[0].Rows.Count > 0)
-            {
-                foreach (DataRow drBuilding in dsBuildings.Tables[0].Rows)
-                {
-                    String name = drBuilding["Building"].ToString();
-                    String abbr = drBuilding["Code"].ToString();
-                    String datapath = drBuilding["DataPath"].ToString();
-                    mySqlConn.InsertBuilding(name, abbr, out status);
-                }
-            }
-            mySqlConn.ToggleConnection(false);
-        }
-
         public List<Customer> GetCustomers(bool includeAddress, String category)
         {
             List<Customer> customers = new List<Customer>();
