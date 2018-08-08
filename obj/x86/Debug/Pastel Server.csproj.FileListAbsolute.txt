@@ -28,3 +28,4 @@ C:\Dev\repos\YellowMonkey\Astrodon_Server\obj\x86\Debug\Server.Properties.Resour
 C:\Dev\repos\YellowMonkey\Astrodon_Server\obj\x86\Debug\Pastel Server.csproj.GenerateResource.Cache
 C:\Dev\repos\YellowMonkey\Astrodon_Server\obj\x86\Debug\Server.exe
 C:\Dev\repos\YellowMonkey\Astrodon_Server\obj\x86\Debug\Server.pdb
+C:\Dev\repos\YellowMonkey\Astrodon_Server\obj\x86\Debug\Pastel Server.csprojResolveAssemblyReference.cache

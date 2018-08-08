@@ -308,7 +308,7 @@ namespace Server
                         String accNo = qDR["unit"].ToString();
                         String attachment = qDR["attachment"].ToString();
                         String subject = qDR["subject"].ToString();
-                        String URL = qDR["URL"].ToString();
+                        String URL = string.Empty;// qDR["URL"].ToString();
                         List<String> attachments = new List<string>();
 
                         if (String.IsNullOrWhiteSpace(URL))
@@ -615,7 +615,7 @@ namespace Server
                         }
                     }
                     catch { }
-                    String query = "SELECT id, email1, fileName, debtorEmail, sentDate1, unit, attachment, subject,URL FROM tblStatementRun WHERE (sentDate1 is null)";
+                    String query = "SELECT * FROM tblStatementRun WHERE (sentDate1 is null)";
                     ds = DataHandler.getData(query, out status);
                 }
                 catch (InsufficientMemoryException e)
