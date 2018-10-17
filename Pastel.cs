@@ -242,7 +242,11 @@ namespace Server
                     bool isuna = false;
                     try
                     {
+                        
+
                         int id = int.Parse(Row["id"].ToString());
+                        RaiseEvent("Processing Record " + id.ToString());
+
                         period = Row["period"].ToString().Trim();
                         trnDate = Row["trnDate"].ToString().Trim();
                         acc = Row["accnumber"].ToString().Trim();
@@ -277,8 +281,9 @@ namespace Server
                                 if (postAmt != "0.00") { returner = PostBatch(path, StrIn, entryType); }
                             }
                         }
-                        catch
+                        catch(Exception ex1)
                         {
+                            RaiseEvent("Exception " + ex1.Message);
                             return;
                         }
                         trustResult += returner + Environment.NewLine;
@@ -325,8 +330,9 @@ namespace Server
                                     }
                                 }
                             }
-                            catch
+                            catch(Exception ex2)
                             {
+                                RaiseEvent("Exception " + ex2.Message);
                                 return;
                             }
                         }
@@ -351,12 +357,18 @@ namespace Server
                             }
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception ex3)
                     {
-                        trustResult += ex.Message + Environment.NewLine;
+                        trustResult += ex3.Message + Environment.NewLine;
+                        RaiseEvent("Exception " + ex3.Message);
                         return;
                     }
                 }
+            }
+            else
+            {
+                RaiseEvent("Zero records Found");
+
             }
             trustResult += "=======ENDING TRUST==============" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + Environment.NewLine;
             RaiseEvent(trustResult);
