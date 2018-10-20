@@ -434,7 +434,7 @@ namespace Server
             if (queue != null && queue.Tables.Count > 0 && queue.Tables[0].Rows.Count > 0)
             {
                 tobeprocessed = queue.Tables[0].Rows.Count;
-                RaiseEvent("Mail count = " + queue.Tables[0].Rows.Count.ToString());
+                RaiseEvent("Mail count = " + queue.Tables[0].Rows.Count.ToString(), "SendStatements");
                 foreach (DataRow qDR in queue.Tables[0].Rows)
                 {
                     try
@@ -467,7 +467,7 @@ namespace Server
                             {
                                 if (MailSender.SendMail("noreply@astrodon.co.za", email1, debtorEmail, subject, OrdinaryMessage(accNo, debtorEmail, isRentalStatement), false, out status, attach))
                                 {
-                                    if (!String.IsNullOrEmpty(status)) { RaiseEvent(status); }
+                                    if (!String.IsNullOrEmpty(status)) { RaiseEvent(status, "SendStatements"); }
                                     String update1 = "UPDATE tblStatementRun SET sentDate1 = getDate(), errorMessage = 'Processed & Sent' WHERE id = " + id;
                                     DataHandler.setData(update1, out status);
                                 }
@@ -475,7 +475,7 @@ namespace Server
                                 {
                                     String update1 = "UPDATE tblStatementRun SET sentDate1 = getDate(), errorMessage = 'Error: " + status + "' WHERE id = " + id;
                                     DataHandler.setData(update1, out status);
-                                    RaiseEvent(status);
+                                    RaiseEvent(status, "SendStatements");
                                 }
                             }
                         }
@@ -483,13 +483,13 @@ namespace Server
                         {
                             String update1 = "UPDATE tblStatementRun SET sentDate1 = getDate(), errorMessage = 'Processed' WHERE id = " + id;
                             DataHandler.setData(update1, out status);
-                            RaiseEvent("Can't send mail");
+                            RaiseEvent("Can't send mail", "SendStatements");
                         }
                         processed += 1;
                     }
                     catch (Exception ex)
                     {
-                        RaiseEvent(ex.Message);
+                        RaiseEvent(ex.Message, "SendStatements");
                     }
                 }
             }
@@ -563,7 +563,7 @@ namespace Server
                 Sftp ftpClient = new Sftp();
                 mySqlConn.ToggleConnection(true);
                 ftpClient.ConnectClient();
-                RaiseEvent("Mail count = " + queue.Tables[0].Rows.Count.ToString());
+                RaiseEvent("Mail count = " + queue.Tables[0].Rows.Count.ToString(), "SendLetters");
                 foreach (DataRow qDR in queue.Tables[0].Rows)
                 {
                     try
@@ -582,8 +582,8 @@ namespace Server
                         {
                             if (attachments[i].Contains("PA Attachments"))
                             {
-                                RaiseEvent("Original file name = " + attachments[i]);
-                                attachments[i] = attachments[i].Replace("K:\\Debtors System\\PA Attachments\\", @"C:\\Pastel11\\Debtors System\\PA Attachments\\");
+                                RaiseEvent("Original file name = " + attachments[i], "SendLetters");
+                                attachments[i] = attachments[i].Replace("K:\\Debtors System\\PA Attachments\\", @"K:\\Pastel11\\Debtors System\\PA Attachments\\");
                             }
                         }
                         String[] files = new string[attachments.Length];
@@ -599,15 +599,6 @@ namespace Server
                             files[i] = fileName;
                             String actFileTitle = Path.GetFileNameWithoutExtension(fileName);
                             String actFile = Path.GetFileName(fileName);
-                            try
-                            {
-                                mySqlConn.InsertStatement(actFileTitle, "Customer Statements", actFile, accNo, email1);
-                                ftpClient.Upload(fileName, actFile, false);
-                            }
-                            catch (Exception ex)
-                            {
-                                RaiseEvent("Error: " + ex.Message);
-                            }
                         }
                         if (email1.Length > 0 && String.IsNullOrEmpty(sentDate))
                         {
@@ -634,7 +625,7 @@ namespace Server
                             }
                             catch (Exception ex)
                             {
-                                RaiseEvent(ex.Message);
+                                RaiseEvent("Update tblLetterRun: " + ex.Message, "SendLetters");
                             }
                         }
                         else
@@ -646,7 +637,7 @@ namespace Server
                     }
                     catch (Exception ex)
                     {
-                        RaiseEvent(ex.Message);
+                        RaiseEvent(ex.Message, "SendLetters");
                     }
                 }
                 mySqlConn.ToggleConnection(false);
@@ -683,7 +674,7 @@ namespace Server
                         {
                             if (attachments[i].Contains("PA Attachments"))
                             {
-                                RaiseEvent("Original file name = " + attachments[i]);
+                                RaiseEvent("Original file name = " + attachments[i], "SendImmediateLetters");
                                 attachments[i] = attachments[i].Replace("K:\\Debtors System\\PA Attachments\\", @"C:\\Pastel11\\Debtors System\\PA Attachments\\");
                             }
                         }
@@ -700,12 +691,6 @@ namespace Server
                             files[i] = fileName;
                             String actFileTitle = Path.GetFileNameWithoutExtension(fileName);
                             String actFile = Path.GetFileName(fileName);
-                            try
-                            {
-                                mysqlConn.InsertStatement(actFileTitle, "Customer Statements", actFile, accNo, email1);
-                                ftpClient.Upload(fileName, actFile, false);
-                            }
-                            catch { }
                         }
 
                         if (email1.Length > 0 && String.IsNullOrEmpty(sentDate))
@@ -732,14 +717,14 @@ namespace Server
                         }
                         else
                         {
-                            RaiseEvent("Can't send mail");
+                            RaiseEvent("Can't send mail", "SendImmediateLetters");
                             String update1 = "UPDATE tblLetterRun SET sentDate = getDate(), errorMessage = 'Error: No email address' WHERE id = " + id;
                             DataHandler.setData(update1, out status);
                         }
                     }
                     catch (Exception ex)
                     {
-                        RaiseEvent(ex.Message);
+                        RaiseEvent(ex.Message, "SendImmediateLetters");
                     }
                 }
                 mySqlConn.ToggleConnection(false);
@@ -747,9 +732,9 @@ namespace Server
             }
         }
 
-        private void RaiseEvent(String message)
+        private void RaiseEvent(String message,string callerMethod = "")
         {
-            if (Message != null) { Message(this, new PastelArgs(message)); }
+            if (Message != null) { Message(this, new PastelArgs(callerMethod + " " + message)); }
         }
 
         private DataSet GetQueuedStatements()
@@ -821,7 +806,7 @@ namespace Server
         private String GetAttachment(String fileName, bool isStatement)
         {
             //C:\Pastel11\Debtors System\statements
-            String serverDrive = @"C:\Pastel11\Debtors System";
+            String serverDrive = @"K:\Pastel11\Debtors System";
             //String serverDrive = @"K:\Debtors System";
             String statementFolder = (isStatement ? "statements" : "letters");
             //String serverDrive = AppDomain.CurrentDomain.BaseDirectory;
@@ -841,11 +826,11 @@ namespace Server
         private String GetLetter(String fileName)
         {
             //C:\Pastel11\Debtors System\statements
-            String serverDrive = @"C:\Pastel11\Debtors System";
+            String serverDrive = @"K:\Pastel11\Debtors System";
             String statementFolder = "Letters";
-            if (fileName.Contains(@"K:\Debtors System\PA Attachments"))
+            if (fileName.Contains(@"K:\Pastel11\Debtors System\PA Attachments"))
             {
-                fileName = fileName.Replace("K:\\Debtors System\\PA Attachments\\", "K:\\");
+                fileName = fileName.Replace("K:\\Pastel11\\Debtors System\\PA Attachments\\", "K:\\");
                 statementFolder = "PA Attachments";
             }
             fileName = fileName.Replace("K:\\", "");
@@ -860,6 +845,7 @@ namespace Server
             }
             else
             {
+                RaiseEvent("File not found : " + absFileName);
                 return String.Empty;
             }
         }
