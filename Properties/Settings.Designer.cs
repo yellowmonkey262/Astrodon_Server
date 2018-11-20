@@ -277,19 +277,20 @@ namespace Server.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://www.lindenlifesaving.co.za/sms/smsservice.asmx")]
-        public string Server_StatusChecker_SMSService {
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=STEPHEN-PC\\MTDNDSQL;Initial Catalog=Astrodon;Persist Security Info=Tr" +
+            "ue;User ID=sa;Password=m3t@p@$$")]
+        public string AstrodonConnectionString1 {
             get {
-                return ((string)(this["Server_StatusChecker_SMSService"]));
+                return ((string)(this["AstrodonConnectionString1"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=SERVER2\\SQLEXPRESS;Initial Catalog=Astrodon;Persist Security Info=Tru" +
-            "e;User ID=sa;Password=sa")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source.;Initial Catalog=Astrodon;Persist Security Info=True;User ID=sa;Passw" +
+            "ord=1q2w#E$R")]
         public string AstrodonConnectionString {
             get {
                 return ((string)(this["AstrodonConnectionString"]));
@@ -298,12 +299,11 @@ namespace Server.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=STEPHEN-PC\\MTDNDSQL;Initial Catalog=Astrodon;Persist Security Info=Tr" +
-            "ue;User ID=sa;Password=m3t@p@$$")]
-        public string AstrodonConnectionString1 {
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.metathought.co.za/sms/smsservice.asmx")]
+        public string Server_StatusChecker_SMSService {
             get {
-                return ((string)(this["AstrodonConnectionString1"]));
+                return ((string)(this["Server_StatusChecker_SMSService"]));
             }
         }
     }

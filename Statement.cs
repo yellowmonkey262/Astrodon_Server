@@ -489,7 +489,7 @@ namespace Server
                     }
                     catch (Exception ex)
                     {
-                        RaiseEvent(ex.Message, "SendStatements");
+                        RaiseEvent(ex.Message + " " + ex.StackTrace, "SendStatements");
                     }
                 }
             }
@@ -597,6 +597,7 @@ namespace Server
                             String attachment = attachments[i];
                             String fileName = GetLetter(attachment);
                             files[i] = fileName;
+                            attachments[i] = fileName;
                             String actFileTitle = Path.GetFileNameWithoutExtension(fileName);
                             String actFile = Path.GetFileName(fileName);
                         }
@@ -619,13 +620,14 @@ namespace Server
                                 }
                                 else
                                 {
-                                    String update1 = "UPDATE tblLetterRun SET sentDate = getDate(), errorMessage = 'Error: " + status + "' WHERE id = " + id;
+                                    String update1 = "UPDATE tblLetterRun SET sentDate = getDate(), errorMessage = 'Error: " + FixError(status) + "' WHERE id = " + id;
+                                    RaiseEvent("Error sending email " + status);
                                     DataHandler.setData(update1, out status);
                                 }
                             }
                             catch (Exception ex)
                             {
-                                RaiseEvent("Update tblLetterRun: " + ex.Message, "SendLetters");
+                                RaiseEvent("Update tblLetterRun: " + ex.Message + " " + ex.StackTrace, "SendLetters");
                             }
                         }
                         else
@@ -637,12 +639,17 @@ namespace Server
                     }
                     catch (Exception ex)
                     {
-                        RaiseEvent(ex.Message, "SendLetters");
+                        RaiseEvent(ex.Message + " " + ex.StackTrace, "SendLetters");
                     }
                 }
                 mySqlConn.ToggleConnection(false);
                 ftpClient.DisconnectClient();
             }
+        }
+
+        private string FixError(string status)
+        {
+            return status.Replace("'", "").Replace("@","");
         }
 
         public void SendImmediateLetters()
@@ -675,7 +682,7 @@ namespace Server
                             if (attachments[i].Contains("PA Attachments"))
                             {
                                 RaiseEvent("Original file name = " + attachments[i], "SendImmediateLetters");
-                                attachments[i] = attachments[i].Replace("K:\\Debtors System\\PA Attachments\\", @"C:\\Pastel11\\Debtors System\\PA Attachments\\");
+                                attachments[i] = attachments[i].Replace("K:\\Debtors System\\PA Attachments\\", @"K:\\Pastel11\\Debtors System\\PA Attachments\\");
                             }
                         }
                         String[] files = new string[attachments.Length];
@@ -689,6 +696,7 @@ namespace Server
                             String attachment = attachments[i];
                             String fileName = GetLetter(attachment);
                             files[i] = fileName;
+                            attachments[i] = fileName;
                             String actFileTitle = Path.GetFileNameWithoutExtension(fileName);
                             String actFile = Path.GetFileName(fileName);
                         }
@@ -724,7 +732,7 @@ namespace Server
                     }
                     catch (Exception ex)
                     {
-                        RaiseEvent(ex.Message, "SendImmediateLetters");
+                        RaiseEvent(ex.Message + " " + ex.StackTrace, "SendImmediateLetters");
                     }
                 }
                 mySqlConn.ToggleConnection(false);
@@ -807,7 +815,6 @@ namespace Server
         {
             //C:\Pastel11\Debtors System\statements
             String serverDrive = @"K:\Pastel11\Debtors System";
-            //String serverDrive = @"K:\Debtors System";
             String statementFolder = (isStatement ? "statements" : "letters");
             //String serverDrive = AppDomain.CurrentDomain.BaseDirectory;
             String folderPath = Path.Combine(serverDrive, statementFolder);
@@ -826,26 +833,25 @@ namespace Server
         private String GetLetter(String fileName)
         {
             //C:\Pastel11\Debtors System\statements
+            string filePath = Path.GetFileName(fileName);
+
             String serverDrive = @"K:\Pastel11\Debtors System";
             String statementFolder = "Letters";
-            if (fileName.Contains(@"K:\Pastel11\Debtors System\PA Attachments"))
+            if (fileName.Contains(@"PA Attachments"))
             {
-                fileName = fileName.Replace("K:\\Pastel11\\Debtors System\\PA Attachments\\", "K:\\");
                 statementFolder = "PA Attachments";
             }
             fileName = fileName.Replace("K:\\", "");
-            //String serverDrive = @"K:\Debtors System";
-            //String serverDrive = AppDomain.CurrentDomain.BaseDirectory;
             String folderPath = Path.Combine(serverDrive, statementFolder);
-            String absFileName = Path.Combine(folderPath, fileName);
-            RaiseEvent(absFileName);
+            String absFileName = Path.Combine(folderPath, filePath);
+            RaiseEvent("Reading: " + absFileName);
             if (File.Exists(absFileName))
             {
                 return absFileName;
             }
             else
             {
-                RaiseEvent("File not found : " + absFileName);
+                RaiseEvent("GetLetter: File not found : " + absFileName);
                 return String.Empty;
             }
         }

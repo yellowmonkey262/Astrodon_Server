@@ -134,7 +134,7 @@ namespace Server
                             String updateString = "UPDATE tblRentalRecon SET posted = 'True' WHERE id = " + myRow["id"].ToString();
                             DataHandler.setData(updateString, out status);
                         }
-                        RaiseEvent(returner);
+                        RaiseEvent("runRental " + returner);
                     }
                     catch { }
                 }
@@ -796,7 +796,7 @@ namespace Server
                 if (StrReturn != "0")
                 {
                     String[] returnValues = StrReturn.Split(new String[] { "|" }, StringSplitOptions.None);
-                    StrReturn = GetResultDesc(returnValues[0]);
+                    StrReturn = GetResultDesc(path,returnValues[0]);
                 }
                 return StrReturn;
             }
@@ -927,7 +927,7 @@ namespace Server
             return amt;
         }
 
-        private String GetResultDesc(String strRCode)
+        private String GetResultDesc(string path, String strRCode)
         {
             String returnString = "";
             switch (strRCode)
@@ -1070,7 +1070,7 @@ namespace Server
                     returnString = "99 = General Error";
                     break;
             }
-            return returnString;
+            return Path.Combine(baseDataPath, path) + " -> " + returnString;
         }
 
         private String[] GetBuildingStuff(String Reference)

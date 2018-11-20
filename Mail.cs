@@ -692,7 +692,8 @@ namespace Server
                     {
                         foreach (String attachment in attachments)
                         {
-                            objMail.Attachments.Add(new Attachment(attachment));
+                            if(!string.IsNullOrWhiteSpace(attachment))
+                              objMail.Attachments.Add(new Attachment(attachment));
                         }
                     }
                     catch (Exception ex)

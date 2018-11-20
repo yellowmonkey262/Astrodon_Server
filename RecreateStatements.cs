@@ -892,11 +892,11 @@ namespace Server {
             bf = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
             bf2 = BaseFont.CreateFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, false);
             statementFolder = "statements";
-            String serverDrive = "K:\\Debtors System";
+            String serverDrive = "K:\\Pastel11\\Debtors System";
             //String serverDrive = AppDomain.CurrentDomain.BaseDirectory;
             folderPath = Path.Combine(serverDrive, statementFolder);
             if (!Directory.Exists(folderPath)) {
-                folderPath = Path.Combine("C:\\Pastel11\\Debtors System", statementFolder);
+                folderPath = Path.Combine("K:\\Pastel11\\Debtors System", statementFolder);
             }
         }
 

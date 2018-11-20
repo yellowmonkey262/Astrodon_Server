@@ -37,6 +37,7 @@ namespace Server
             catch (Exception ex)
             {
                 msg = ex.Message;
+                throw new Exception(msg + " -> " + sqlString);
                 ds = null;
             }
             finally
@@ -68,6 +69,7 @@ namespace Server
             catch (Exception ex)
             {
                 msg = ex.Message;
+                throw new Exception(msg + " -> " + sqlString);
                 ds = null;
             }
             finally
@@ -89,6 +91,7 @@ namespace Server
             catch (Exception ex)
             {
                 msg = ex.Message;
+                throw new Exception(msg + " -> " + sqlString);
             }
             finally
             {
@@ -115,6 +118,7 @@ namespace Server
             catch (Exception ex)
             {
                 msg = ex.Message;
+                throw new Exception(msg + " -> " + sqlString);
             }
             finally
             {
