@@ -30,3 +30,4 @@ C:\Dev\repos\YellowMonkey\Astrodon_Server\obj\x86\Debug\Pastel Server.csproj.Gen
 C:\Dev\repos\YellowMonkey\Astrodon_Server\bin\Debug\Server.exe
 C:\Dev\repos\YellowMonkey\Astrodon_Server\bin\Debug\Server.pdb
 C:\Dev\repos\YellowMonkey\Astrodon_Server\bin\Debug\Renci.SshNet.dll
+C:\Dev\repos\YellowMonkey\Astrodon_Server\obj\x86\Debug\Server.frmDeleteStatements.resources

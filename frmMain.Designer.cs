@@ -40,9 +40,11 @@
             this.sendEmailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.offAdminPurgeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wARNINGForceRentalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wARNINGFileDeletionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stephenUploadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.wARNINGFileDeletionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.utilsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteStatementsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -74,7 +76,8 @@
             this.searchEmailsToolStripMenuItem,
             this.adminToolStripMenuItem,
             this.clearScreenToolStripMenuItem,
-            this.stephenUploadToolStripMenuItem});
+            this.stephenUploadToolStripMenuItem,
+            this.utilsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(805, 24);
@@ -184,6 +187,13 @@
             this.wARNINGForceRentalToolStripMenuItem.Text = "WARNING : Force Rental";
             this.wARNINGForceRentalToolStripMenuItem.Click += new System.EventHandler(this.wARNINGForceRentalToolStripMenuItem_Click);
             // 
+            // wARNINGFileDeletionToolStripMenuItem
+            // 
+            this.wARNINGFileDeletionToolStripMenuItem.Name = "wARNINGFileDeletionToolStripMenuItem";
+            this.wARNINGFileDeletionToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.wARNINGFileDeletionToolStripMenuItem.Text = "WARNING: File Deletion";
+            this.wARNINGFileDeletionToolStripMenuItem.Click += new System.EventHandler(this.wARNINGFileDeletionToolStripMenuItem_Click);
+            // 
             // clearScreenToolStripMenuItem
             // 
             this.clearScreenToolStripMenuItem.Name = "clearScreenToolStripMenuItem";
@@ -198,12 +208,20 @@
             this.stephenUploadToolStripMenuItem.Text = "Stephen - Upload";
             this.stephenUploadToolStripMenuItem.Click += new System.EventHandler(this.stephenUploadToolStripMenuItem_Click);
             // 
-            // wARNINGFileDeletionToolStripMenuItem
+            // utilsToolStripMenuItem
             // 
-            this.wARNINGFileDeletionToolStripMenuItem.Name = "wARNINGFileDeletionToolStripMenuItem";
-            this.wARNINGFileDeletionToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.wARNINGFileDeletionToolStripMenuItem.Text = "WARNING: File Deletion";
-            this.wARNINGFileDeletionToolStripMenuItem.Click += new System.EventHandler(this.wARNINGFileDeletionToolStripMenuItem_Click);
+            this.utilsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteStatementsToolStripMenuItem});
+            this.utilsToolStripMenuItem.Name = "utilsToolStripMenuItem";
+            this.utilsToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
+            this.utilsToolStripMenuItem.Text = "Utils";
+            // 
+            // deleteStatementsToolStripMenuItem
+            // 
+            this.deleteStatementsToolStripMenuItem.Name = "deleteStatementsToolStripMenuItem";
+            this.deleteStatementsToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.deleteStatementsToolStripMenuItem.Text = "Delete Statements";
+            this.deleteStatementsToolStripMenuItem.Click += new System.EventHandler(this.deleteStatementsToolStripMenuItem_Click);
             // 
             // frmMain
             // 
@@ -249,6 +267,8 @@
         private System.Windows.Forms.ToolStripMenuItem offAdminPurgeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wARNINGForceRentalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wARNINGFileDeletionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem utilsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteStatementsToolStripMenuItem;
     }
 }
 

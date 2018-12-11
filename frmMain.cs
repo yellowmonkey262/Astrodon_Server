@@ -77,7 +77,10 @@ namespace Server
 
         private void pastel_Message(object sender, PastelArgs e)
         {
+            string fName = @"C:\Temp\PastelServerDebug_" + DateTime.Today.ToString("yyyyMMdd") + ".txt";
+            File.AppendAllText(fName, DateTime.Now.ToString() + "->" + e.message);
             SetText(e.message);
+
         }
 
         #endregion events
@@ -234,6 +237,12 @@ namespace Server
         private void Client_MessageHandler(object sender, SqlArgs e)
         {
             SetText(e.msgArgs);
+        }
+
+        private void deleteStatementsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var frm = new frmDeleteStatements();
+            frm.Show();
         }
     }
 }

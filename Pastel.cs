@@ -87,7 +87,8 @@ namespace Server
 
         private void RaiseEvent(String message)
         {
-            if (Message != null) { Message(this, new PastelArgs(message)); }
+            Message?.Invoke(this, new PastelArgs(message));
+
         }
 
         private void fsc_Created(object sender, FileSystemEventArgs e)
@@ -498,7 +499,7 @@ namespace Server
                 {
                     bool una = bool.Parse(Row["una"].ToString());
                     int id = int.Parse(Row["id"].ToString());
-
+                    
                     int period = int.Parse(Row["period"].ToString().Trim());
                     String trnDate = Row["trnDate"].ToString().Trim();
                     String path = Row["datapath"].ToString().Trim();
@@ -509,6 +510,9 @@ namespace Server
                     String desc = Row["description"].ToString().Trim();
                     double amt = double.Parse(Row["amount"].ToString().Trim()) * -1;
                     double orgAmt = amt * -1;
+                    bool posted = false;
+                    RaiseEvent("TBLExport: Id:" + id.ToString() + " P:" + period.ToString() + " pt:" +path + " r:"+refr+" c:"+code + " d:"+desc);
+
                     try
                     {
                         int periodControl = GetPeriod(Row["accnumber"].ToString().Trim());
@@ -548,20 +552,35 @@ namespace Server
                                 }
                                 else
                                 {
-                                    if (refr.Contains("D/")) { refr = GetDebitAcc(refr); }
-                                    if (refr.Length > 6) { refr = refr.Substring(0, 5); }
+                                    if (refr.Contains("D/"))
+                                    {
+                                        refr = GetDebitAcc(refr);
+                                    }
+                                    if (refr.Length > 6)
+                                    {
+                                        refr = refr.Substring(0, 5);
+                                    }
                                     acc = refr;
                                     gdc = "D";
                                 }
                             }
                         }
-                        catch { return; }
+                        catch (Exception ex)
+                        {
+                            RaiseEvent("Exception 1 on p: " + path + " Desc:" + desc + " ref:" + reference + " er:" + ex.Message);
+                            return;
+                        }
                         String testDesc = desc.Replace(" ", "");
                         int entryType = 0;
                         entryType = (amt < 0 ? int.Parse(entryTypes[1]) : int.Parse(entryTypes[0]));
-                        if (testDesc.Contains("CASHTRANS")) { entryType = int.Parse(entryTypes[1]); }
+                        if (testDesc.Contains("CASHTRANS")) {
+                            entryType = int.Parse(entryTypes[1]);
+                        }
                         String postAmt = amt.ToString("#0.00");
-                        if (reference.Length > 6) { reference = reference.Substring(0, 6); }
+                        if (reference.Length > 6)
+                        {
+                            reference = reference.Substring(0, 6);
+                        }
                         String StrIn = period + "|" + trnDate + "|" + gdc + "|" + acc + "|" + reference + "|" + desc + "|" + postAmt + "|0|0|A|||0|0|" + contra + "|1|1";
                         String returner = "";
                         try
@@ -570,12 +589,30 @@ namespace Server
                             {
                                 if ((testDesc.Contains("(") && testDesc.Contains(")") && testDesc.Contains("/")) || testDesc.Contains("D/"))
                                 {
-                                    if (postAmt != "0.00") { returner = PostBatch(path, StrIn, entryType); }
+                                    if (postAmt != "0.00")
+                                    {
+                                        returner = PostBatch(path, StrIn, entryType);
+                                        RaiseEvent("PostBatch 1 r:" + returner);
+                                        posted = true;
+                                    }
+                                    else
+                                    {
+                                        RaiseEvent("PostBatch 1 err: " + postAmt);
+                                    }
                                     if (returner.Split(new String[] { "|" }, StringSplitOptions.None)[0] != "0")
                                     {
                                         String display = returner.Replace("|", "-");
                                         StrIn = period + "|" + trnDate + "|G|9990000|" + reference + "|" + desc + "|" + postAmt + "|0|0|A|||0|0|" + contra + "|1|1";
-                                        if (postAmt != "0.00") { returner = PostBatch(path, StrIn, entryType); }
+                                        if (postAmt != "0.00")
+                                        {
+                                            returner = PostBatch(path, StrIn, entryType);
+                                            RaiseEvent("PostBatch 2 r:" + returner);
+                                            posted = true;
+                                        }
+                                        else
+                                        {
+                                            RaiseEvent("PostBatch 2 err: " + postAmt);
+                                        }
                                     }
                                 }
                                 if (code == "VB")
@@ -603,31 +640,64 @@ namespace Server
                                 entryType = int.Parse(entryTypes[1]);
                                 if (refr == "XXXXXX")
                                 {
-                                    if (testDesc.Contains("(") && testDesc.Contains(")") && testDesc.Contains("/")) { acc = "1085000"; }
-                                    if (testDesc.Contains("D/")) { acc = "1086000"; }
-                                    if (testDesc.Contains("BRCASH")) { acc = "1085000"; }
+                                    if (testDesc.Contains("(") && testDesc.Contains(")") && testDesc.Contains("/"))
+                                    {
+                                        acc = "1085000";
+                                    }
+                                    if (testDesc.Contains("D/"))
+                                    {
+                                        acc = "1086000";
+                                    }
+                                    if (testDesc.Contains("BRCASH"))
+                                    {
+                                        acc = "1085000";
+                                    }
                                     gdc = "G";
                                 }
                                 else if (testDesc.Contains("(") && testDesc.Contains(")") && testDesc.Contains("/"))
                                 {
                                     acc = "3200000";
                                 }
-                                if ((code == "SM" || code == "VB") && testDesc.Substring(0, 6) == "BRCASH") { postAmt = amt.ToString("#0.00"); }
+                                if ((code == "SM" || code == "VB") && testDesc.Substring(0, 6) == "BRCASH")
+                                {
+                                    postAmt = amt.ToString("#0.00");
+                                }
                                 StrIn = period + "|" + trnDate + "|" + gdc + "|" + acc + "|" + reference + "|" + desc + "|" + postAmt + "|0|0|A|||0|0|" + contra + "|1|1";
 
                                 if (testDesc.Contains("(") && testDesc.Contains(")") && testDesc.Contains("/"))
                                 {
                                     entryType = int.Parse(entryTypes[0]);
                                     double pamt = double.Parse(postAmt);
-                                    if (pamt < 0) { pamt *= -1; }
+                                    if (pamt < 0)
+                                    {
+                                        pamt *= -1;
+                                    }
                                     postAmt = pamt.ToString();
                                 }
 
-                                if (postAmt != "0.00") { returner = PostBatch(path, StrIn, entryType); }
+                                if (postAmt != "0.00")
+                                {
+                                    returner = PostBatch(path, StrIn, entryType);
+                                    RaiseEvent("PostBatch 3 r:" + returner);
+                                    posted = true;
+                                }
+                                else
+                                {
+                                    RaiseEvent("PostBatch 3 err: " + postAmt);
+                                }
                                 if (returner.Split(new String[] { "|" }, StringSplitOptions.None)[0] != "0")
                                 {
                                     StrIn = period + "|" + trnDate + "|G|9990000|" + reference + "|" + desc + "|" + postAmt + "|0|0|A|||0|0|" + contra + "|1|1";
-                                    if (postAmt != "0.00") { returner = PostBatch(path, StrIn, entryType); }
+                                    if (postAmt != "0.00")
+                                    {
+                                        returner = PostBatch(path, StrIn, entryType);
+                                        RaiseEvent("PostBatch 4 r:" + returner);
+                                        posted = true;
+                                    }
+                                    else
+                                    {
+                                        RaiseEvent("PostBatch 4 err: " + postAmt);
+                                    }
                                 }
                             }
                             else
@@ -635,36 +705,77 @@ namespace Server
                                 if (!una && path == Server.Properties.Settings.Default.astrodonPath)
                                 {
                                     StrIn = period + "|" + trnDate + "|G|" + acc + "|" + reference + "|" + desc + "|" + postAmt + "|14|0|A|||0|0|8100000|1|1";
-                                    if (postAmt != "0.00") { returner = PostBatch(path, StrIn, 5); }
+                                    if (postAmt != "0.00")
+                                    {
+                                        returner = PostBatch(path, StrIn, 5);
+                                        RaiseEvent("PostBatch 5 r:" + returner);
+                                        posted = true;
+                                    }
+                                    else
+                                    {
+                                        RaiseEvent("PostBatch 5 err: " + postAmt);
+                                    }
                                     if (returner.Split(new String[] { "|" }, StringSplitOptions.None)[0] != "0")
                                     {
                                         String display = returner.Replace("|", "-");
                                         StrIn = period + "|" + trnDate + "|G|9990000|" + reference + "|" + desc + "|" + postAmt + "|14|0|A|||0|0|8100000|1|1";
-                                        if (postAmt != "0.00") { returner = PostBatch(path, StrIn, 5); }
+                                        if (postAmt != "0.00")
+                                        {
+                                            returner = PostBatch(path, StrIn, 5);
+                                            RaiseEvent("PostBatch 6 r:" + returner);
+                                            posted = true;
+                                        }
+                                        else
+                                        {
+                                            RaiseEvent("PostBatch 6 err: " + postAmt);
+                                        }
                                     }
                                 }
                                 else
                                 {
-                                    if (postAmt != "0.00") { returner = PostBatch(path, StrIn, entryType); }
+                                    if (postAmt != "0.00")
+                                    {
+                                        returner = PostBatch(path, StrIn, entryType);
+                                        RaiseEvent("PostBatch 7 r:" + returner);
+                                        posted = true;
+                                    }
+                                    else
+                                    {
+                                        RaiseEvent("PostBatch 7 err: " + postAmt);
+                                    }
                                     if (returner.Split(new String[] { "|" }, StringSplitOptions.None)[0] != "0")
                                     {
                                         String display = returner.Replace("|", "-");
                                         StrIn = period + "|" + trnDate + "|G|9990000|" + reference + "|" + desc + "|" + postAmt + "|0|0|A|||0|0|" + contra + "|1|1";
-                                        if (postAmt != "0.00") { returner = PostBatch(path, StrIn, entryType); }
+                                        if (postAmt != "0.00")
+                                        {
+                                            returner = PostBatch(path, StrIn, entryType);
+                                            RaiseEvent("PostBatch8 r:" + returner);
+                                            posted = true;
+                                        }
+                                        else
+                                        {
+                                            RaiseEvent("PostBatch 8 err: " + postAmt);
+                                        }
                                     }
                                 }
+                                if(posted)
+                                  counter += 1;
+                                else
+                                {
+                                    RaiseEvent("Record not posted");
+                                }
                             }
-                            counter += 1;
                         }
                         catch (Exception ex)
                         {
-                            buildResult += ex.Message + Environment.NewLine;
+                            RaiseEvent("Exception 2 on p: " + path + " Desc:" + desc + " ref:" + reference + " er:" + ex.Message);
                             return;
                         }
                     }
                     catch (Exception ex)
                     {
-                        buildResult += ex.Message + Environment.NewLine;
+                        RaiseEvent("Exception 3 on p: " + path + " Desc:" + desc + " ref:" + reference + " er:" + ex.Message);
                         return;
                     }
                 }
