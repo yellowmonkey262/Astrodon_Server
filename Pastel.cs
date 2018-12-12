@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -246,7 +247,6 @@ namespace Server
                         
 
                         int id = int.Parse(Row["id"].ToString());
-                        RaiseEvent("Processing Record " + id.ToString());
 
                         period = Row["period"].ToString().Trim();
                         trnDate = Row["trnDate"].ToString().Trim();
@@ -407,11 +407,27 @@ namespace Server
                         amt = double.Parse(Row["amount"].ToString().Trim()) * -1;
                         entryType = (amt < 0 ? 2 : 1);
                         reference = refr;
-                        if (reference.Length > 6) { reference = reference.Substring(0, 6); }
+                        if (reference.Length > 6)
+                        {
+                            reference = reference.Substring(0, 6);
+                        }
                         String postAmt = amt.ToString("#0.00");
                         String testDesc = desc.Replace(" ", "");
                         String returner = "";
                         String StrIn = "";
+
+
+                        RaiseEvent(Environment.NewLine +
+                                           "TBLExport: Id:" + id.ToString()
+                                            + " P:" + period.ToString()
+                                            + " pt:" + path
+                                            + " r:" + refr
+                                            + " c:" + code
+                                            + " d:" + desc
+                                            + " trnd:" + trnDate
+                                            + " amnt:" + amt.ToString()
+                                            );
+
                         try
                         {
                             if (testDesc.Contains("BRCASH") && code != "SM" && code != "VB")
@@ -420,11 +436,19 @@ namespace Server
                             else
                             {
                                 StrIn = period + "|" + trnDate + "|G|" + acc + "|" + reference + "|" + desc + "|" + postAmt + "|0|0|A|||0|0|9325000|1|1";
-                                if (postAmt != "0.00") { returner = PostBatch(path, StrIn, 5); }
+                                if (postAmt != "0.00")
+                                {
+                                    returner = PostBatch(path, StrIn, 5);
+                                }
+                                else
+                                {
+                                    RaiseEvent("Unalloc Post 1 Err " + path + Environment.NewLine + StrIn);
+                                }
                             }
                         }
-                        catch
+                        catch(Exception ex)
                         {
+                            RaiseEvent("Unalloc Post 1 Ex " + path+ ex.Message + Environment.NewLine + StrIn);
                             return;
                         }
                         unaResult += returner + Environment.NewLine;
@@ -439,13 +463,21 @@ namespace Server
                                     if (postAmt != "0")
                                     {
                                         StrIn = period + "|" + trnDate + "|G|" + acc + "|" + reference + "|" + desc + "|" + postAmt + "|0|0|A|||0|0|9325000|1|1";
-                                        if (postAmt != "0.00") { returner = PostBatch(path, StrIn, 5); }
+                                        if (postAmt != "0.00")
+                                        {
+                                            returner = PostBatch(path, StrIn, 5);
+                                        }
+                                        else
+                                        {
+                                            RaiseEvent("Unalloc Post 2 Err " + path + Environment.NewLine + StrIn);
+                                        }
                                         //String astAcc = "";
                                     }
                                 }
                             }
-                            catch
+                            catch (Exception ex)
                             {
+                                RaiseEvent("Unalloc Post 2 Ex " + path + ex.Message + Environment.NewLine + StrIn);
                                 return;
                             }
                         }
@@ -458,7 +490,14 @@ namespace Server
                                 if (postAmt != "0")
                                 {
                                     StrIn = period + "|" + trnDate + "|G|" + acc + "|" + reference + "|" + desc + "|" + postAmt + "|0|0|A|||0|0|9325000|1|1";
-                                    if (postAmt != "0.00") { returner = PostBatch(path, StrIn, 5); }
+                                    if (postAmt != "0.00")
+                                    {
+                                        returner = PostBatch(path, StrIn, 5);
+                                    }
+                                    else
+                                    {
+                                        RaiseEvent("Unalloc Post 3 Err " + path + Environment.NewLine + StrIn);
+                                    }
                                 }
                             }
                         }
@@ -466,6 +505,7 @@ namespace Server
                     catch (Exception ex)
                     {
                         unaResult += ex.Message + Environment.NewLine;
+                        RaiseEvent("Unalloc Post 3 Ex " + path + ex.Message + Environment.NewLine);
                         return;
                     }
                 }
@@ -511,7 +551,19 @@ namespace Server
                     double amt = double.Parse(Row["amount"].ToString().Trim()) * -1;
                     double orgAmt = amt * -1;
                     bool posted = false;
-                    RaiseEvent("TBLExport: Id:" + id.ToString() + " P:" + period.ToString() + " pt:" +path + " r:"+refr+" c:"+code + " d:"+desc);
+
+                    RaiseEvent(Environment.NewLine + 
+                                       "TBLExport: Id:" + id.ToString() 
+                                        + " P:" + period.ToString() 
+                                        + " pt:" +path 
+                                        + " r:"+refr
+                                        + " c:"+code 
+                                        + " d:"+desc 
+                                        + " una:"+una.ToString()
+                                        + " trnd:" + trnDate 
+                                        + " contra:" + contra
+                                        + " amnt:" + amt.ToString() 
+                                        );
 
                     try
                     {
@@ -585,14 +637,17 @@ namespace Server
                         String returner = "";
                         try
                         {
-                            if ((testDesc.Contains("(") && testDesc.Contains(")") && testDesc.Contains("/")) || testDesc.Contains("BRCASH") || testDesc.Contains("D/"))
+                            if ((testDesc.Contains("(") && 
+                                testDesc.Contains(")") 
+                                && testDesc.Contains("/")) 
+                                || testDesc.Contains("BRCASH") 
+                                || testDesc.Contains("D/"))
                             {
                                 if ((testDesc.Contains("(") && testDesc.Contains(")") && testDesc.Contains("/")) || testDesc.Contains("D/"))
                                 {
                                     if (postAmt != "0.00")
                                     {
                                         returner = PostBatch(path, StrIn, entryType);
-                                        RaiseEvent("PostBatch 1 r:" + returner);
                                         posted = true;
                                     }
                                     else
@@ -606,7 +661,6 @@ namespace Server
                                         if (postAmt != "0.00")
                                         {
                                             returner = PostBatch(path, StrIn, entryType);
-                                            RaiseEvent("PostBatch 2 r:" + returner);
                                             posted = true;
                                         }
                                         else
@@ -678,7 +732,6 @@ namespace Server
                                 if (postAmt != "0.00")
                                 {
                                     returner = PostBatch(path, StrIn, entryType);
-                                    RaiseEvent("PostBatch 3 r:" + returner);
                                     posted = true;
                                 }
                                 else
@@ -691,7 +744,6 @@ namespace Server
                                     if (postAmt != "0.00")
                                     {
                                         returner = PostBatch(path, StrIn, entryType);
-                                        RaiseEvent("PostBatch 4 r:" + returner);
                                         posted = true;
                                     }
                                     else
@@ -708,7 +760,6 @@ namespace Server
                                     if (postAmt != "0.00")
                                     {
                                         returner = PostBatch(path, StrIn, 5);
-                                        RaiseEvent("PostBatch 5 r:" + returner);
                                         posted = true;
                                     }
                                     else
@@ -722,7 +773,6 @@ namespace Server
                                         if (postAmt != "0.00")
                                         {
                                             returner = PostBatch(path, StrIn, 5);
-                                            RaiseEvent("PostBatch 6 r:" + returner);
                                             posted = true;
                                         }
                                         else
@@ -736,7 +786,6 @@ namespace Server
                                     if (postAmt != "0.00")
                                     {
                                         returner = PostBatch(path, StrIn, entryType);
-                                        RaiseEvent("PostBatch 7 r:" + returner);
                                         posted = true;
                                     }
                                     else
@@ -750,7 +799,6 @@ namespace Server
                                         if (postAmt != "0.00")
                                         {
                                             returner = PostBatch(path, StrIn, entryType);
-                                            RaiseEvent("PostBatch8 r:" + returner);
                                             posted = true;
                                         }
                                         else
@@ -893,17 +941,27 @@ namespace Server
         {
             try
             {
+                
+                StrIn = FixPastelDate(StrIn);
+
                 String StrReturn = "0";
                 String strCodeIn;
                 StrReturn = SDK.SetDataPath(Path.Combine(baseDataPath, path));
-                if (StrReturn == "0") { StrReturn = SDK.SetGLPath(baseDataPath); }
+                if (StrReturn == "0")
+                {
+                    StrReturn = SDK.SetGLPath(baseDataPath);
+                }
                 if (StrReturn == "0")
                 {
                     strCodeIn = StrIn;
                     short et = (short)entryType;
                     StrReturn = SDK.ImportGLBatch(StrIn, et);
+                    RaiseEvent("ImportGLBatch{"+ et .ToString()+ "}:" + StrIn +Environment.NewLine + "RET:"+ StrReturn);
                 }
-                if (StrReturn.Length == 0) { return "9"; }
+                if (StrReturn.Length == 0)
+                {
+                    return "9";
+                }
                 if (StrReturn != "0")
                 {
                     String[] returnValues = StrReturn.Split(new String[] { "|" }, StringSplitOptions.None);
@@ -911,10 +969,30 @@ namespace Server
                 }
                 return StrReturn;
             }
-            catch
+            catch(Exception e)
             {
+                RaiseEvent("ImportGLBatch Exception " + e.Message);
                 return string.Empty;
             }
+        }
+
+        private string FixPastelDate(string strIn)
+        {
+            string[] postStr = strIn.Split(new String[] { "|" }, StringSplitOptions.None);
+            string s = postStr[1];
+            DateTime dt;
+            if(DateTime.TryParse(s, out dt))
+            {
+
+                postStr[1] = dt.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+               // RaiseEvent("DT:" + s + " -> " + postStr[1]);
+
+                strIn = string.Join("|", postStr);
+            }
+
+            return strIn;
+
         }
 
         private DataSet Populate(String pType)
@@ -927,11 +1005,11 @@ namespace Server
                     break;
 
                 case "Trust":
-                    sqlString = "SELECT * FROM tblExport WHERE accnumber is not null and una = 'False' ORDER BY lid";
+                    sqlString = "SELECT * FROM tblExport WHERE accnumber is not null and (una = 'False' or una = '0') ORDER BY lid";
                     break;
 
                 case "UNA":
-                    sqlString = "SELECT * FROM tblExport WHERE accnumber is not null and una = 'True' ORDER BY lid";
+                    sqlString = "SELECT * FROM tblExport WHERE accnumber is not null and (una = 'True' or una = '1') ORDER BY lid";
                     break;
 
                 case "Building":
@@ -1315,7 +1393,7 @@ namespace Server
         public List<Customer> AddCustomers(String buildKey, String buildPath)
         {
             List<Customer> customers = new List<Customer>();
-            String pastelName = "C:\\Pastel11";
+            String pastelName = "K:\\Pastel11";
             String returner = SDK.SetDataPath(Path.Combine(pastelName, buildPath));
             if (returner.Contains("99"))
             {
@@ -1345,22 +1423,7 @@ namespace Server
 
         public void LoadBuildings()
         {
-            String status = String.Empty;
-            MySqlConnector mySqlConn = new MySqlConnector();
-            mySqlConn.ToggleConnection(true);
-            String buildingQuery = "SELECT Building, Code, DataPath FROM tblBuildings WHERE (Building NOT LIKE 'ASTRODON%') AND (Building <> 'LETTERS') ORDER BY Building";
-            DataSet dsBuildings = DataHandler.getData(buildingQuery, out status);
-            if (dsBuildings != null && dsBuildings.Tables.Count > 0 && dsBuildings.Tables[0].Rows.Count > 0)
-            {
-                foreach (DataRow drBuilding in dsBuildings.Tables[0].Rows)
-                {
-                    String name = drBuilding["Building"].ToString();
-                    String abbr = drBuilding["Code"].ToString();
-                    String datapath = drBuilding["DataPath"].ToString();
-                    mySqlConn.InsertBuilding(name, abbr, out status);
-                }
-            }
-            mySqlConn.ToggleConnection(false);
+            
         }
 
         public List<Customer> GetCustomers(bool includeAddress, String category)
@@ -1404,7 +1467,7 @@ namespace Server
         public List<String> GetCustomers(String path)
         {
             List<String> customers = new List<string>();
-            String pastelName = "C:\\Pastel11";
+            String pastelName = "K:\\Pastel11";
             String returner = SDK.SetDataPath(Path.Combine(pastelName, path));
             if (returner == "0")
             {

@@ -31,7 +31,6 @@ namespace Server
                     String building = dr["Building"].ToString();
                     String code = dr["Code"].ToString();
                     String datapath = dr["DataPath"].ToString();
-                    UpdateWeb(building, code, datapath);
                 }
                 catch (Exception ex)
                 {
@@ -40,24 +39,8 @@ namespace Server
             }
         }
 
-        private void UpdateWeb(String building, String code, String datapath)
-        {
-            MySqlConnector mySql = new MySqlConnector();
-            mySql.MessageHandler += new EventHandler<SqlArgs>(mySql_MessageHandler);
-            mySql.ToggleConnection(true);
-            String status = String.Empty;
-            List<Customer> customers = frmMain.pastel.AddCustomers("", datapath);
-            foreach (Customer c in customers)
-            {
-                mySql.InsertCustomer(building, code, c.accNumber, c.Email, out status);
-            }
-            mySql.ToggleConnection(false);
-            MessageBox.Show("Complete");
-        }
+      
 
-        private void mySql_MessageHandler(object sender, SqlArgs e)
-        {
-            MessageBox.Show(e.msgArgs);
-        }
+       
     }
 }

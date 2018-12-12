@@ -51,9 +51,6 @@
     <Reference Include="itextsharp.xtra">
       <HintPath>..\..\Astrodon_Desktop\DLL\itextsharp.xtra.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data">
-      <HintPath>..\..\Astrodon_Desktop\DLL\MySql.Data.dll</HintPath>
-    </Reference>
     <Reference Include="OpenPop">
       <HintPath>..\..\Astrodon_Desktop\DLL\OpenPop.dll</HintPath>
     </Reference>
@@ -83,7 +80,6 @@
     </Compile>
     <Compile Include="Customer.cs" />
     <Compile Include="DataHandler.cs" />
-    <Compile Include="DummyUpload.cs" />
     <Compile Include="frmCustomerList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -121,9 +117,6 @@
       <DependentUpon>frmUpdateBuilding.cs</DependentUpon>
     </Compile>
     <Compile Include="Mail.cs" />
-    <Compile Include="MySqlConnector.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Pastel.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -136,9 +129,6 @@
     </Compile>
     <Compile Include="Purger.cs" />
     <Compile Include="RecreateStatements.cs" />
-    <Compile Include="SFTP.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="SMSPoll.cs" />
     <Compile Include="Statement.cs" />
     <Compile Include="UpdateTrustees.cs" />

@@ -21,11 +21,11 @@ namespace Server
 
         public delegate void MessageHandler(object sender, PastelArgs e);
 
-        private UpdateTrustees updTrust;
+     //   private UpdateTrustees updTrust;
 
         public Statement()
         {
-            updTrust = new UpdateTrustees();
+          //  updTrust = new UpdateTrustees();
             timer = new System.Timers.Timer(600000); //3600000
             timer2 = new System.Timers.Timer(600000); //3600000
             timer3 = new System.Timers.Timer(3600000);
@@ -108,7 +108,7 @@ namespace Server
                     SendLetters();
                     SendBulkMails(true, true);
                     Purge();
-                    updTrust.Update();
+                    //updTrust.Update();
                 }
             }
             timer.Enabled = true;
@@ -116,47 +116,42 @@ namespace Server
 
         public void UpdateCustomers()
         {
-            String buildQ = "SELECT Building, Code, DataPath FROM tblBuildings WHERE isBuilding = 'True' ORDER by Building";
-            String status = String.Empty;
-            DataSet ds = DataHandler.getData(buildQ, out status);
-            List<CustomerConstruct> allCustomers = new List<CustomerConstruct>();
-            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-            {
-                MySqlConnector mySql = new MySqlConnector();
-                mySql.ToggleConnection(true);
-                foreach (DataRow dr in ds.Tables[0].Rows)
-                {
-                    String buildingName = dr["Building"].ToString();
-                    String buildingAbbr = dr["Code"].ToString();
-                    List<Customer> customers = frmMain.pastel.AddCustomers("", dr["DataPath"].ToString());
-                    foreach (Customer c in customers)
-                    {
-                        CustomerConstruct cc = new CustomerConstruct();
-                        cc.buildingName = buildingName;
-                        cc.buildingAbbr = buildingAbbr;
-                        cc.acc = c.accNumber;
-                        cc.emails = c.Email;
-                        allCustomers.Add(cc);
-                    }
-                }
-                RaiseEvent(allCustomers.Count.ToString() + " customers retrieved from pastel");
-                mySql.ToggleConnection(true);
-                int updateCount = 0;
-                foreach (CustomerConstruct cc in allCustomers)
-                {
-                    mySql.InsertCustomer(cc.buildingName, cc.buildingAbbr, cc.acc, cc.emails, out status);
-                    if (status != "OK") { RaiseEvent(status); } else { updateCount++; }
-                }
-                mySql.ToggleConnection(false);
-                RaiseEvent(updateCount.ToString() + " customers updated");
-            }
-            RaiseEvent("Customer update complete");
+            //String buildQ = "SELECT Building, Code, DataPath FROM tblBuildings WHERE isBuilding = 'True' ORDER by Building";
+            //String status = String.Empty;
+            //DataSet ds = DataHandler.getData(buildQ, out status);
+            //List<CustomerConstruct> allCustomers = new List<CustomerConstruct>();
+            //if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            //{
+            //    foreach (DataRow dr in ds.Tables[0].Rows)
+            //    {
+            //        String buildingName = dr["Building"].ToString();
+            //        String buildingAbbr = dr["Code"].ToString();
+            //        List<Customer> customers = frmMain.pastel.AddCustomers("", dr["DataPath"].ToString());
+            //        foreach (Customer c in customers)
+            //        {
+            //            CustomerConstruct cc = new CustomerConstruct();
+            //            cc.buildingName = buildingName;
+            //            cc.buildingAbbr = buildingAbbr;
+            //            cc.acc = c.accNumber;
+            //            cc.emails = c.Email;
+            //            allCustomers.Add(cc);
+            //        }
+            //    }
+            //    RaiseEvent(allCustomers.Count.ToString() + " customers retrieved from pastel");
+            //    int updateCount = 0;
+            //    foreach (CustomerConstruct cc in allCustomers)
+            //    {
+            //        if (status != "OK") { RaiseEvent(status); } else { updateCount++; }
+            //    }
+            //    RaiseEvent(updateCount.ToString() + " customers updated");
+            //}
+            //RaiseEvent("Customer update complete");
         }
 
         public void Purge()
         {
-            String statementFolder = "C:\\Pastel11\\Debtors System\\statements";
-            String letterFolder = "C:\\Pastel11\\Debtors System\\Letters";
+            String statementFolder = "K:\\Pastel11\\Debtors System\\statements";
+            String letterFolder = "K:\\Pastel11\\Debtors System\\Letters";
             string[] filePaths = Directory.GetFiles(statementFolder);
             for (int i = 0; i < filePaths.Length; i++)
             {
@@ -298,117 +293,7 @@ namespace Server
             }
         }
 
-        public void UploadFiles()
-        {
-            RaiseEvent("Starting upload: " + DateTime.Now.ToString());
-            DataSet dsComplete = GetCompletedStatements();
-            MySqlConnector mySqlConn = new MySqlConnector();
-            mySqlConn.ToggleConnection(true);
-            Sftp ftpClient = new Sftp();
-            ftpClient.ConnectClient();
-
-            if (dsComplete != null && dsComplete.Tables.Count > 0 && dsComplete.Tables[0].Rows.Count > 0)
-            {
-                foreach (DataRow qDR in dsComplete.Tables[0].Rows)
-                {
-                    bool uploaded = false;
-                    while (!uploaded)
-                    {
-                        try
-                        {
-                            String actFile = qDR["fileName"].ToString();
-
-                            String fileName = GetAttachment(actFile, true);
-                            String actFile2 = actFile;
-                            String debtorEmail = qDR["debtorEmail"].ToString();
-                            String accNo = qDR["unit"].ToString();
-                            String attachment = qDR["attachment"].ToString();
-                            String subject = qDR["subject"].ToString();
-                            String[] email1 = qDR["email1"].ToString().Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-                            bool inserted = mySqlConn.InsertStatement(actFile, "Customer Statements", actFile2, accNo, email1);
-                            RaiseEvent("Upload for " + accNo + " " + inserted.ToString());
-
-                            ftpClient.Upload(fileName, actFile2, false);
-                            RaiseEvent("Uploaded " + actFile);
-
-                            List<String> attachments = new List<string>();
-                            attachments.Add(fileName);
-                            if (attachment != "none")
-                            {
-                                String absAttachmentName = GetAttachment(attachment, true);
-                                attachments.Add(absAttachmentName);
-                                mySqlConn.InsertStatement(attachment, "Customer Statements", attachment, accNo, email1);
-                                ftpClient.Upload(absAttachmentName, attachment, false);
-                            }
-                            uploaded = true;
-                        }
-                        catch { }
-                    }
-                }
-            }
-            else
-            {
-                RaiseEvent("No files");
-            }
-            RaiseEvent("Upload completed: " + DateTime.Now.ToString());
-        }
-
-        public void UploadFiles(DateTime filterDate)
-        {
-            RaiseEvent("Starting upload: " + DateTime.Now.ToString());
-            DataSet dsComplete = GetCompletedStatements(filterDate);
-            MySqlConnector mySqlConn = new MySqlConnector();
-            mySqlConn.ToggleConnection(true);
-            Sftp ftpClient = new Sftp();
-            ftpClient.ConnectClient();
-
-            if (dsComplete != null && dsComplete.Tables.Count > 0 && dsComplete.Tables[0].Rows.Count > 0)
-            {
-                foreach (DataRow qDR in dsComplete.Tables[0].Rows)
-                {
-                    bool uploaded = false;
-                    while (!uploaded)
-                    {
-                        try
-                        {
-                            String actFile = qDR["fileName"].ToString();
-
-                            String fileName = GetAttachment(actFile, true);
-                            String actFile2 = actFile;
-                            String debtorEmail = qDR["debtorEmail"].ToString();
-                            String accNo = qDR["unit"].ToString();
-                            String attachment = qDR["attachment"].ToString();
-                            String subject = qDR["subject"].ToString();
-                            String[] email1 = qDR["email1"].ToString().Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-
-                            bool inserted = mySqlConn.InsertStatement(actFile, "Customer Statements", actFile2, accNo, email1);
-                            RaiseEvent("Upload for " + accNo + " " + inserted.ToString());
-
-                            ftpClient.Upload(fileName, actFile2, false);
-                            RaiseEvent("Uploaded " + actFile);
-
-                            List<String> attachments = new List<string>();
-                            attachments.Add(fileName);
-                            if (attachment != "none")
-                            {
-                                String absAttachmentName = GetAttachment(attachment, true);
-                                attachments.Add(absAttachmentName);
-                                mySqlConn.InsertStatement(attachment, "Customer Statements", attachment, accNo, email1);
-                                ftpClient.Upload(absAttachmentName, attachment, false);
-                            }
-                            uploaded = true;
-                        }
-                        catch { }
-                    }
-                }
-            }
-            else
-            {
-                RaiseEvent("No files");
-            }
-            RaiseEvent("Upload completed: " + DateTime.Now.ToString());
-        }
-
+  
         public void SendStatements()
         {
             isRunning = true;
@@ -416,96 +301,97 @@ namespace Server
             statusTimer.Elapsed += statusTimer_Elapsed;
             currentDate = DateTime.Now;
             //SetStartStatements();
+            return; //disable sending statements
 
-            #region Old Send
 
-            try
-            {
-                if (!Properties.Settings.Default.statementrunning)
-                {
-                    Properties.Settings.Default.statementrunning = true;
-                    Properties.Settings.Default.Save();
-                }
-            }
-            catch { }
-            DataSet queue = GetQueuedStatements();
-            int processed = 0;
-            int tobeprocessed = 0;
-            if (queue != null && queue.Tables.Count > 0 && queue.Tables[0].Rows.Count > 0)
-            {
-                tobeprocessed = queue.Tables[0].Rows.Count;
-                RaiseEvent("Mail count = " + queue.Tables[0].Rows.Count.ToString(), "SendStatements");
-                foreach (DataRow qDR in queue.Tables[0].Rows)
-                {
-                    try
-                    {
-                        String id = qDR["id"].ToString();
-                        String[] email1 = qDR["email1"].ToString().Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-                        String sentDate1 = qDR["sentDate1"].ToString();
-                        String actFile = qDR["fileName"].ToString();
-                        bool isRentalStatement = actFile.ToUpper().EndsWith("_R.PDF");
-                        String fileName = GetAttachment(actFile, true);
-                        String actFile2 = actFile;
-                        String debtorEmail = qDR["debtorEmail"].ToString();
-                        String accNo = qDR["unit"].ToString();
-                        String attachment = qDR["attachment"].ToString();
-                        String subject = qDR["subject"].ToString();
-                        List<String> attachments = new List<string>();
-                        attachments.Add(fileName);
-                        if (attachment != "none")
-                        {
-                            String absAttachmentName = GetAttachment(attachment, true);
-                            attachments.Add(absAttachmentName);
-                        }
+            //#region Old Send
 
-                        if (email1.Length > 0 && String.IsNullOrEmpty(sentDate1))
-                        {
-                            status = String.Empty;
+            //try
+            //{
+            //    if (!Properties.Settings.Default.statementrunning)
+            //    {
+            //        Properties.Settings.Default.statementrunning = true;
+            //        Properties.Settings.Default.Save();
+            //    }
+            //}
+            //catch { }
+            //DataSet queue = GetQueuedStatements();
+            //int processed = 0;
+            //int tobeprocessed = 0;
+            //if (queue != null && queue.Tables.Count > 0 && queue.Tables[0].Rows.Count > 0)
+            //{
+            //    tobeprocessed = queue.Tables[0].Rows.Count;
+            //    RaiseEvent("Mail count = " + queue.Tables[0].Rows.Count.ToString(), "SendStatements");
+            //    foreach (DataRow qDR in queue.Tables[0].Rows)
+            //    {
+            //        try
+            //        {
+            //            String id = qDR["id"].ToString();
+            //            String[] email1 = qDR["email1"].ToString().Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+            //            String sentDate1 = qDR["sentDate1"].ToString();
+            //            String actFile = qDR["fileName"].ToString();
+            //            bool isRentalStatement = actFile.ToUpper().EndsWith("_R.PDF");
+            //            String fileName = GetAttachment(actFile, true);
+            //            String actFile2 = actFile;
+            //            String debtorEmail = qDR["debtorEmail"].ToString();
+            //            String accNo = qDR["unit"].ToString();
+            //            String attachment = qDR["attachment"].ToString();
+            //            String subject = qDR["subject"].ToString();
+            //            List<String> attachments = new List<string>();
+            //            attachments.Add(fileName);
+            //            if (attachment != "none")
+            //            {
+            //                String absAttachmentName = GetAttachment(attachment, true);
+            //                attachments.Add(absAttachmentName);
+            //            }
 
-                            String[] attach = attachments.ToArray();
-                            if (attach.Length > 0)
-                            {
-                                if (MailSender.SendMail("noreply@astrodon.co.za", email1, debtorEmail, subject, OrdinaryMessage(accNo, debtorEmail, isRentalStatement), false, out status, attach))
-                                {
-                                    if (!String.IsNullOrEmpty(status)) { RaiseEvent(status, "SendStatements"); }
-                                    String update1 = "UPDATE tblStatementRun SET sentDate1 = getDate(), errorMessage = 'Processed & Sent' WHERE id = " + id;
-                                    DataHandler.setData(update1, out status);
-                                }
-                                else
-                                {
-                                    String update1 = "UPDATE tblStatementRun SET sentDate1 = getDate(), errorMessage = 'Error: " + status + "' WHERE id = " + id;
-                                    DataHandler.setData(update1, out status);
-                                    RaiseEvent(status, "SendStatements");
-                                }
-                            }
-                        }
-                        else
-                        {
-                            String update1 = "UPDATE tblStatementRun SET sentDate1 = getDate(), errorMessage = 'Processed' WHERE id = " + id;
-                            DataHandler.setData(update1, out status);
-                            RaiseEvent("Can't send mail", "SendStatements");
-                        }
-                        processed += 1;
-                    }
-                    catch (Exception ex)
-                    {
-                        RaiseEvent(ex.Message + " " + ex.StackTrace, "SendStatements");
-                    }
-                }
-            }
-            try
-            {
-                if (tobeprocessed == processed)
-                {
-                    Properties.Settings.Default.statementrunning = false;
-                    Properties.Settings.Default.Save();
-                }
-            }
-            catch { }
-            isRunning = false;
-            UploadFiles();
+            //            if (email1.Length > 0 && String.IsNullOrEmpty(sentDate1))
+            //            {
+            //                status = String.Empty;
 
-            #endregion Old Send
+            //                String[] attach = attachments.ToArray();
+            //                if (attach.Length > 0)
+            //                {
+            //                    if (MailSender.SendMail("noreply@astrodon.co.za", email1, debtorEmail, subject, OrdinaryMessage(accNo, debtorEmail, isRentalStatement), false, out status, attach))
+            //                    {
+            //                        if (!String.IsNullOrEmpty(status)) { RaiseEvent(status, "SendStatements"); }
+            //                        String update1 = "UPDATE tblStatementRun SET sentDate1 = getDate(), errorMessage = 'Processed & Sent' WHERE id = " + id;
+            //                        DataHandler.setData(update1, out status);
+            //                    }
+            //                    else
+            //                    {
+            //                        String update1 = "UPDATE tblStatementRun SET sentDate1 = getDate(), errorMessage = 'Error: " + status + "' WHERE id = " + id;
+            //                        DataHandler.setData(update1, out status);
+            //                        RaiseEvent(status, "SendStatements");
+            //                    }
+            //                }
+            //            }
+            //            else
+            //            {
+            //                String update1 = "UPDATE tblStatementRun SET sentDate1 = getDate(), errorMessage = 'Processed' WHERE id = " + id;
+            //                DataHandler.setData(update1, out status);
+            //                RaiseEvent("Can't send mail", "SendStatements");
+            //            }
+            //            processed += 1;
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            RaiseEvent(ex.Message + " " + ex.StackTrace, "SendStatements");
+            //        }
+            //    }
+            //}
+            //try
+            //{
+            //    if (tobeprocessed == processed)
+            //    {
+            //        Properties.Settings.Default.statementrunning = false;
+            //        Properties.Settings.Default.Save();
+            //    }
+            //}
+            //catch { }
+            //isRunning = false;
+
+            //#endregion Old Send
         }
 
         private void statusTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -559,10 +445,6 @@ namespace Server
             DataSet queue = GetQueuedLetters(false);
             if (queue != null && queue.Tables.Count > 0 && queue.Tables[0].Rows.Count > 0)
             {
-                MySqlConnector mySqlConn = new MySqlConnector();
-                Sftp ftpClient = new Sftp();
-                mySqlConn.ToggleConnection(true);
-                ftpClient.ConnectClient();
                 RaiseEvent("Mail count = " + queue.Tables[0].Rows.Count.ToString(), "SendLetters");
                 foreach (DataRow qDR in queue.Tables[0].Rows)
                 {
@@ -642,8 +524,6 @@ namespace Server
                         RaiseEvent(ex.Message + " " + ex.StackTrace, "SendLetters");
                     }
                 }
-                mySqlConn.ToggleConnection(false);
-                ftpClient.DisconnectClient();
             }
         }
 
@@ -657,11 +537,6 @@ namespace Server
             DataSet queue = GetQueuedLetters(true);
             if (queue != null && queue.Tables.Count > 0 && queue.Tables[0].Rows.Count > 0)
             {
-                MySqlConnector mySqlConn = new MySqlConnector();
-                mySqlConn.ToggleConnection(true);
-                Sftp ftpClient = new Sftp();
-                ftpClient.ConnectClient();
-                MySqlConnector mysqlConn = new MySqlConnector();
                 RaiseEvent("Mail count = " + queue.Tables[0].Rows.Count.ToString());
                 foreach (DataRow qDR in queue.Tables[0].Rows)
                 {
@@ -735,8 +610,6 @@ namespace Server
                         RaiseEvent(ex.Message + " " + ex.StackTrace, "SendImmediateLetters");
                     }
                 }
-                mySqlConn.ToggleConnection(false);
-                ftpClient.DisconnectClient();
             }
         }
 

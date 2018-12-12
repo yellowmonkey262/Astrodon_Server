@@ -27,37 +27,6 @@ namespace Server
             webCustomers = new List<WebConstruct>();
         }
 
-        public void GetWebAccounts(String buildingAbbr, bool showMe)
-        {
-            String status = String.Empty;
-            String astroQuery = "SELECT b.name, m.account_no, m.owner_email as email, f.username, f.disable FROM tx_astro_complex b inner join tx_astro_account_user_mapping m";
-            astroQuery += " on m.complex_id = b.uid inner join fe_users f on m.cruser_id = f.uid ";
-            if (!String.IsNullOrEmpty(buildingAbbr)) { astroQuery += " WHERE b.abbr = '" + buildingAbbr + "'"; }
-            astroQuery += " order by b.name, m.account_no";
-            MySqlConnector mySql = new MySqlConnector();
-            DataSet ds = mySql.GetData(astroQuery, null, out status);
-            int webCount = 0;
-            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-            {
-                foreach (DataRow dr in ds.Tables[0].Rows)
-                {
-                    String acc = dr["account_no"].ToString();
-                    bool active = (int.Parse(dr["disable"].ToString()) == 0 ? true : false);
-                    String owner_email = dr["email"].ToString();
-                    String username = dr["username"].ToString();
-                    if (dataCustomers.Keys.Contains(acc))
-                    {
-                        dataCustomers[acc].Web_Email = owner_email;
-                        dataCustomers[acc].Web_User = username;
-                        dataCustomers[acc].Web_User_Active = active;
-                        webCount++;
-                    }
-                }
-            }
-
-            if (showMe) { MessageBox.Show(webCount.ToString() + " customers from web"); }
-        }
-
         public void GetPastelAccounts(String buildingCode, bool showMe)
         {
             String buildQ = "SELECT Building, DataPath FROM tblBuildings ";
@@ -68,9 +37,6 @@ namespace Server
 
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
-                MySqlConnector mySql = new MySqlConnector();
-                mySql.ToggleConnection(true);
-
                 foreach (DataRow dr in ds.Tables[0].Rows)
                 {
                     String buildingName = dr["Building"].ToString();
@@ -112,7 +78,6 @@ namespace Server
             if (!String.IsNullOrEmpty(abbr))
             {
                 GetPastelAccounts(abbr, true);
-                GetWebAccounts(abbr, true);
                 if (dataCustomers.Count > 0)
                 {
                     BindingSource bs = new BindingSource();
@@ -157,8 +122,6 @@ namespace Server
 
             if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
             {
-                MySqlConnector mySql = new MySqlConnector();
-                mySql.ToggleConnection(true);
                 foreach (DataRow dr in ds.Tables[0].Rows)
                 {
                     String buildingName = dr["Building"].ToString();

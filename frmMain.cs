@@ -37,15 +37,25 @@ namespace Server
                 pastel.Message += new Pastel.MessageHandler(pastel_Message);
                 pastel.InitialisePastel();
                 String msg;
+                pastel_Message(this, new PastelArgs("Mail Receiver"));
                 receiver = new MailReceiver(out msg);
+                pastel_Message(this, new PastelArgs("SMS Poll"));
                 smsPoll = new SMSPoll();
                 smsPoll.NewMessageEvent += new EventHandler<MessageArgs>(smsPoll_NewMessageEvent);
                 smsPoll.InitializePolling();
+                pastel_Message(this, new PastelArgs("Statement Runner"));
                 statementRunner = new Statement();
                 statementRunner.Message += new Statement.MessageHandler(statementRunner_Message);
+
+                pastel_Message(this, new PastelArgs("Purger"));
                 Purger purger = new Purger();
             }
-            catch { }
+            catch(Exception ex)
+            {
+                pastel_Message(this, new PastelArgs("Startup Error: " + ex.Message));
+            }
+
+            pastel_Message(this, new PastelArgs("Startup Completed"));
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -77,8 +87,7 @@ namespace Server
 
         private void pastel_Message(object sender, PastelArgs e)
         {
-            string fName = @"C:\Temp\PastelServerDebug_" + DateTime.Today.ToString("yyyyMMdd") + ".txt";
-            File.AppendAllText(fName, DateTime.Now.ToString() + "->" + e.message);
+           
             SetText(e.message);
 
         }
@@ -110,6 +119,12 @@ namespace Server
                 rtfStatus.ScrollToCaret();
                 Application.DoEvents();
             }
+
+            if (!Directory.Exists(@"C:\Temp"))
+                Directory.CreateDirectory(@"C:\Temp");
+
+            string fName = @"C:\Temp\PastelServerDebug_" + DateTime.Today.ToString("yyyyMMdd") + ".txt";
+            File.AppendAllText(fName, DateTime.Now.ToString() + "->" + text + Environment.NewLine);
         }
 
         private void ResetMail()
@@ -158,7 +173,6 @@ namespace Server
         private void testUploadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             statementRunner.SendStatements();
-            statementRunner.UploadFiles();
         }
 
         private void sendSMSToolStripMenuItem_Click(object sender, EventArgs e)
@@ -212,7 +226,6 @@ namespace Server
 
         private void stephenUploadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            statementRunner.UploadFiles(DateTime.Now.AddDays(-1));
         }
 
         private void offAdminPurgeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -229,15 +242,10 @@ namespace Server
 
         private void wARNINGFileDeletionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Sftp client = new Sftp();
-            client.MessageHandler += Client_MessageHandler;
-            client.ClearFiles();
+      
         }
 
-        private void Client_MessageHandler(object sender, SqlArgs e)
-        {
-            SetText(e.msgArgs);
-        }
+      
 
         private void deleteStatementsToolStripMenuItem_Click(object sender, EventArgs e)
         {
