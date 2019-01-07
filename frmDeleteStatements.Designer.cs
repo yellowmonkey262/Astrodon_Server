@@ -69,6 +69,11 @@
             // numFrom
             // 
             this.numFrom.Location = new System.Drawing.Point(139, 22);
+            this.numFrom.Maximum = new decimal(new int[] {
+            -727379968,
+            232,
+            0,
+            0});
             this.numFrom.Name = "numFrom";
             this.numFrom.Size = new System.Drawing.Size(120, 20);
             this.numFrom.TabIndex = 3;
@@ -76,6 +81,11 @@
             // numTo
             // 
             this.numTo.Location = new System.Drawing.Point(139, 51);
+            this.numTo.Maximum = new decimal(new int[] {
+            -727379968,
+            232,
+            0,
+            0});
             this.numTo.Name = "numTo";
             this.numTo.Size = new System.Drawing.Size(120, 20);
             this.numTo.TabIndex = 4;

@@ -22,7 +22,7 @@ namespace Server
             string stats;
             DataHandler.setData(sql, out stats);
 
-            MessageBox.Show("Delete executed");
+            MessageBox.Show("Delete executed : " + stats);
 
             Close();
         }
