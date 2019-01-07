@@ -430,7 +430,7 @@ namespace Server
 
                         try
                         {
-                            if (testDesc.Contains("BRCASH") && code != "SM" && code != "VB")
+                            if (testDesc.Contains("BRCASH") && code != "SM" && code != "VB")  
                             {
                             }
                             else
